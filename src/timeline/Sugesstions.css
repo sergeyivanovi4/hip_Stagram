@@ -1,0 +1,60 @@
+.sugesstion {
+    width: 20vw;
+    margin-top: 30px;
+    padding: 15px;
+    position: sticky;
+    top: 0px;
+}
+
+.sugesstion__title {
+    color: gray;
+    font-weight: bold;
+}
+
+.sugesstion__username__left {
+    display: flex;
+    align-items: center;
+}
+
+.sugesstion__username {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-top: 15px;
+    gap: 10px;
+}
+
+.sugesstion__title__userbadge {
+    color: white;
+}
+.username__info {
+    display: flex;
+    flex-direction: column;
+}
+
+.username__relation {
+    color: gray;
+    font-size: 12px;
+}
+
+.sugesstion__follow__btn {
+    color: #61dafb;
+    font-weight: bold;
+    background: 0;
+    border: 0;
+}
+
+.sugesstion__follow__btn:hover {
+    color: blue;
+    cursor: pointer;
+}
+
+.username {
+    font-weight: bolder;
+    font-size: 16px;
+    color: white;
+}
+
+.avatar {
+    margin-right: 10px;
+}

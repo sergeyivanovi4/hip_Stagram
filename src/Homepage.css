@@ -1,0 +1,79 @@
+.homepage {
+    display: flex;
+    flex-direction: row;
+    /* position: fixed; */
+}
+
+
+.homepage__timeline {
+    margin-left: 20vw;
+    width: 80vw;
+}
+
+.sidenave__logo {
+    font-size: 32px;
+    margin: 15px 0 40px 0;
+}
+.sidenave__logo a {
+    text-decoration: none;
+    font-weight: bold;
+    color: #000000;
+}
+.sidenave__logo a:hover {
+    font-size: 31px;
+
+}
+  
+.sidenave__buttons, .sidenave__more {
+    display: flex;
+    flex-direction: column;
+}
+
+.sidenave__btn {
+    display: flex;
+    align-items: center;
+    color: rgb(0, 0, 0);
+    gap: 10px;
+    margin: 5px 10px 5px 10px;
+    padding: 10px 15px 10px 15px;
+    border-radius: 15px;
+    width: 100%;
+    background: 0;
+    border: none;
+    transition: all 0.4s;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, .4);
+        cursor: pointer;
+    }
+    &:active {
+        opacity: .7;
+        background-color: #5ddcff;
+    }
+}
+
+  
+.sidenave__btn a {
+    text-decoration: none;
+    color: rgb(0, 0, 0);
+    font-weight: bold;
+}
+
+.sidenave__more {
+    /* align-self: flex-end; */
+    justify-self: end;
+    /* bottom: 3px; */
+}
+
+aside {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+    position: fixed;
+    background: #61dafb;
+    width: 20vw;
+    height: 100vh;
+    gap: 20px;
+}
+
