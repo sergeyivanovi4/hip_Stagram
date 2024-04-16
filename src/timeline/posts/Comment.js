@@ -2,12 +2,12 @@ import React from 'react';
 import "./Comment.css";
 
 function Comment({
-    user,
+    _id,
     text
 }) {
   return (
     <div className='comment'>
-        <span className='comment__name'>{user}: </span>
+        <span className='comment__name'>{_id}: </span>
         <span >{text}</span>
 
     </div>

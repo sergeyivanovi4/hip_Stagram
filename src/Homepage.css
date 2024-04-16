@@ -17,22 +17,33 @@
 .sidenave__logo a {
     text-decoration: none;
     font-weight: bold;
-    color: #000000;
+    color: #61dafb;
 }
 .sidenave__logo a:hover {
     font-size: 31px;
-
 }
   
-.sidenave__buttons, .sidenave__more {
+.sidenave__buttons,
+.sidenave__more {
     display: flex;
     flex-direction: column;
+}
+
+.sidenave__btn a {
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+    transition: color 0.3s; 
+}
+
+.sidenave__btn:hover a {
+    color: rgb(0, 0, 0);
 }
 
 .sidenave__btn {
     display: flex;
     align-items: center;
-    color: rgb(0, 0, 0);
+    color: rgb(255, 255, 255);
     gap: 10px;
     margin: 5px 10px 5px 10px;
     padding: 10px 15px 10px 15px;
@@ -41,28 +52,21 @@
     background: 0;
     border: none;
     transition: all 0.4s;
-
-    &:hover {
-        background-color: rgba(255, 255, 255, .4);
-        cursor: pointer;
-    }
-    &:active {
-        opacity: .7;
-        background-color: #5ddcff;
-    }
 }
 
-  
-.sidenave__btn a {
-    text-decoration: none;
+.sidenave__btn:hover {
+    background-color: #78e2ff;
     color: rgb(0, 0, 0);
-    font-weight: bold;
+    cursor: pointer;
+}
+
+.sidenave__btn:active {
+    opacity: .7;
+    background-color: #5ddcff;
 }
 
 .sidenave__more {
-    /* align-self: flex-end; */
     justify-self: end;
-    /* bottom: 3px; */
 }
 
 aside {
@@ -71,9 +75,8 @@ aside {
     justify-content: space-around;
     align-items: center;
     position: fixed;
-    background: #61dafb;
+    background: black;
     width: 20vw;
     height: 100vh;
     gap: 20px;
 }
-

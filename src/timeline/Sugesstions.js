@@ -5,9 +5,10 @@ import UserBadge from "../userBadge/UserBadge"
 
 
 function Sugesstions({
-    nickName,
+    nick,
     avatar,
     _id,
+    user,
     children
 }) {
   return (
@@ -16,7 +17,7 @@ function Sugesstions({
             for you
         </div>
         
-        <UserBadge nickName={nickName} avatar={avatar} _id={_id}  className='sugesstion__title__userbadge'/>
+        <UserBadge user={user} avatar={avatar} _id={_id}  className='sugesstion__title__userbadge'/>
 
         <div className='sugesstion__usernames'>
             <div className='sugesstion__username'>

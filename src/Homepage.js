@@ -23,8 +23,9 @@ import { authSlice, useLoginMutation } from "./app/_store";
 const history = createHistory()
 
 const Aside = () => {
-	const [{isLoading}] = useLoginMutation() // ?
+	const { data: response, error, isLoading } = useLoginMutation() // ?
 	const dispatch = useDispatch()
+	console.log("response", response)
 
 	const handleLogout = () => {
 		localStorage.removeItem('token');
@@ -67,7 +68,7 @@ const Aside = () => {
 				<Link to="/pageabout">Створити</Link>
 			</button>
 			<button className="sidenave__btn">
-                <UserBadge nickName={"Я"} _id={"001"}/>
+                <UserBadge nick={"Я"} _id={"001"}/>
 			</button>
 			{/* <li>
 			    <Link to="/post/1">POST 1</Link>

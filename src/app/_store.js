@@ -31,10 +31,11 @@ const api = createApi({
   }),
 
   endpoints: (builder) => ({
+
     getHipstagramFind: builder.query({
       query: () => ({
         document: `query HipstagramFind {
-                        UserFind(query: "[{}, {\"sort\": [{\"_id\":-1}]}]"){
+                        UserFind(query: "[ {}, { \"sort\": [{\"_id\:"-1}] } ]") {
                             _id 
                             createdAt
                             login
@@ -46,7 +47,7 @@ const api = createApi({
                                     following { _id }
                         }
                     }`,
-        variables: { query: JSON.stringify() },
+        variables: {},
       }),
     }),
 
@@ -66,12 +67,12 @@ const api = createApi({
                             following { _id }
                       }
                     }`,
-        variables: { _id },
+        variables: { query: JSON.stringify({ _id }) },
       }),
     }),
 
     CreateHipstagramFindOne: builder.mutation({
-      query: ({ _id, user }) => ({
+      query: ({ user }) => ({
         document: `
             mutation CreateUser ($userInput: UserInput!) {
                 createUser(user: $userInput) {
@@ -88,15 +89,15 @@ const api = createApi({
                 }
             }
             `,
-        variables: { _id, user },
+        variables: { user },
       }),
     }),
 
     getHipstagramPost: builder.query({
-      query: ({ post, _id }) => ({
+      query: () => ({
         document: `    
             query GetPost{
-                            PostFind(query:"[{}, {\"sort\":[{\"_id\": -1}]}]"){
+                            PostFind(query:"[{}, {}]"){
                                 _id 
                                 createdAt
                                 text
@@ -111,12 +112,12 @@ const api = createApi({
                                 }
                             }
     } `,
-        variables: { post, _id },
+        variables: {},
       }),
     }),
 
     createHipstagramPost: builder.mutation({
-      query: ({ post, _id }) => ({
+      query: ({ post }) => ({
         document: `
                 mutation createPost($post: PostInput!) {
                     PostUpsert(post: $post) {
@@ -130,14 +131,14 @@ const api = createApi({
                     }
                 }
             `,
-        variables: { post, _id },
+        variables: { post  },
       }),
     }),
 
     getHipstagramAllLikes: builder.query({
-      query: ({ _id }) => ({
-        document: `query GetAllLikes($query: String!){
-                            LikeFind (query: $query){
+      query: ({  }) => ({
+        document: `query GetAllLikes {
+                            LikeFind (query: "[{}]"){
                                 _id 
                                 post { _id }
                                 comment { _id text }
@@ -145,12 +146,12 @@ const api = createApi({
                                 owner { _id login }
                         }
                     }`,
-        variables: { _id },
+        variables: { },
       }),
     }),
 
     createHipstagramLikes: builder.mutation({
-      query: ({ _id, user }) => ({
+      query: ({ user }) => ({
         document: `
                 mutation CreateLike($likeInput: LikeInput!) {
                     LikeUpsert(likeInput: $likeInput) {
@@ -162,14 +163,14 @@ const api = createApi({
                     }
                 }
             `,
-        variables: { _id, user },
+        variables: { user },
       }),
     }),
 
     getHipstagramImage: builder.query({
-        query: ({ _id }) => ({
-          document: `query GetImage($query: String!){
-                            ImageFind (query: $query){
+        query: ({ }) => ({
+          document: `query GetImage{
+                            ImageFind (query: "{}"){
                                 _id 
                                 text
                                 url
@@ -180,12 +181,12 @@ const api = createApi({
                                 owner { _id login }
                         }
                     }`,
-          variables: { _id },
+          variables: {  },
         }),
       }),
   
     createHipstagramImage: builder.mutation({
-        query: ({ _id }) => ({
+        query: ({ }) => ({
           document: `
                     mutation CreateImage ($image: ImageInput!) {
                         ImageUpsert(image: $image) {
@@ -202,7 +203,7 @@ const api = createApi({
                         }
                     }
               `,
-          variables: { _id },
+          variables: { },
         }),
       }),
 
@@ -398,9 +399,12 @@ const actionAboutMe = () => async (dispatch, getState) => {
 export const { setUserData } = authSlice.actions;
 export const {
   getHipstagramFind,
+  getHipstagramPost,
   getHipstagramFindOne,
   useGetRootCatsQuery,
+  useGetHipstagramPostQuery,
   useLoginMutation,
   useGetUserByIdQuery,
   useFullRegisterMutation,
+  useGetHipstagramFindQuery
 } = api;

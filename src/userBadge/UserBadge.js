@@ -4,9 +4,11 @@ import { useHistory } from "react-router-dom";
 import React from 'react'
 
 function UserBadge({
-    nickName,
+    nick,
     avatar,
     _id,
+    owner,
+    user,
     children
 }) {
 
@@ -22,7 +24,7 @@ function UserBadge({
             avatar ? <img scr={avatar} akt="logo" className="user__badge__avatar" /> : <div className="user_badge_placeholder"/>
         }
         <img />
-        <span className="user__badge__name">{nickName}</span>
+        <span className="user__badge__name">{user}</span>
     </div>
   )
 }

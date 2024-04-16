@@ -1,49 +1,49 @@
-import React, { useState } from "react";
+import React, { useState, useEffect  } from "react";
+import { useSelector } from 'react-redux';
 import Sugesstions from "./Sugesstions";
 import "./PageMain.css";
 import Post from "./posts/Post"
+import { getHipstagramPost, useGetHipstagramPostQuery, useGetHipstagramFindQuery } from "../app/_store"
+import InfiniteScroll from "react-infinite-scroll-component";
 
 
 function PageMain() {
-    const [posts, setPosts] = useState([
-        {
-            user: 'test01',
-            postImage: 'https://img.freepik.com/photos-premium/lac-montagnes-arriere-plan_901003-52335.jpg',
-            likes: 12,
-            text: '1д'
-        },
-        {
-            user: 'pest02',
-            postImage: 'https://img.freepik.com/photos-premium/lac-rochers-montagnes-arriere-plan_777078-68632.jpg',
-            likes: 23,
-            text: '20д'
-        },
-        {
-            user: 'kest03',
-            postImage: 'https://img.freepik.com/photos-premium/lac-montagne-montagne-arriere-plan_948735-127270.jpg',
-            likes: 124,
-            text: '3д'
-        },
-        {
-            user: 'cest04',
-            postImage: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQjTiWeOf7hELubx7tEJ2-8Lsb_IfBu8rRWCK1VkwGA_10I5sjg7JWJrCIVupoMd-IR-Q0&usqp=CAU',
-            likes: 10,
-            text: '5г'
-        },
-    ])
+
+        const { data: response, error, isLoading } = useGetHipstagramPostQuery(); 
+    console.log("response", response);
+
+        const [itemsToShow, setItemsToShow] = useState(5); // Кількість постів, які відображаються на старті
+        const loadMoreItems = () => {
+            // При кожному виклику функції loadMoreItems додаємо 5 до кількості відображуваних елементів
+            setItemsToShow(itemsToShow + 5);
+        };
 
     return <div className="pagemain">
         <div className="pagemain__left">
             <div className="timeline__post">
-                {posts.map(post => (
-                    <Post 
-                    user={post.user} 
-                    postImage={post.postImage} 
-                    likes={post.likes} 
-                    text={post.text} 
-                    comments={[{text:"text1", user:"vasia"}, {text:"text2", user:"vasia"}, {text:"text3", user:"vasia"}, {text:"text4", user:"vasia"},{text:"text5", user:"vasia"},{text:"text6", user:"vasia"}]}
-                    />
-                ))}
+                {isLoading ? (<p className="pagemain__loading">Завантаження...</p>) :
+
+                <InfiniteScroll
+                     dataLength={itemsToShow}
+                     next={loadMoreItems}
+                     hasMore={response?.PostFind?.length > itemsToShow} // Перевірка, чи є ще елементи для завантаження
+                     loader={<p className="pagemain__loading">Завантаження...</p>}
+                     endMessage={<p className="pagemain__loading">ВСЕ! Кінец.</p>} // Повідомлення, яке відображається після завантаження всіх елементів
+                >
+                    {response?.PostFind?.slice(0, itemsToShow).map((post) => (
+                                <Post
+                                    key={post._id} // Додаєм ключ для кожного поста
+                                    _id={post._id}
+                                    user={post.owner.login}
+                                    postImage={post.images && post.images[0] && post.images[0].url}
+                                    likes={post.likes}
+                                    text={post.text}
+                                    comments={post.comments}
+                                    owner={post.owner}
+                                />
+                            )
+                    )}
+                </InfiniteScroll>   }  
             </div>
         </div>
         <div className="pagemain__right">
