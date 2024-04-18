@@ -39,6 +39,12 @@
 .sidenave__btn:hover a {
     color: rgb(0, 0, 0);
 }
+.sidenave__btn:hover span {
+    color: rgb(0, 0, 0);
+}
+.sidenave__btn:hover > div > div > div {
+    background-color: rgb(0, 0, 0);
+}
 
 .sidenave__btn {
     display: flex;

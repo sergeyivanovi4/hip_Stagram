@@ -32,7 +32,7 @@ function App() {
 
   const user = useSelector(state => state.auth.token);
 
-  console.log("user", user);
+  console.log("userAPP", user);
   // const [{isLoading, data}] = useLoginMutation()
   // console.log("data", data);
 

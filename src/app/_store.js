@@ -1,5 +1,3 @@
-import { GraphQLClient } from "graphql-request";
-
 import { createApi } from "@reduxjs/toolkit/query/react";
 import { graphqlRequestBaseQuery } from "@rtk-query/graphql-request-base-query";
 import { configureStore, createSlice } from "@reduxjs/toolkit";
@@ -31,8 +29,7 @@ const api = createApi({
   }),
 
   endpoints: (builder) => ({
-
-    getHipstagramFind: builder.query({
+    getFind: builder.query({
       query: () => ({
         document: `query HipstagramFind {
                         UserFind(query: "[ {}, { \"sort\": [{\"_id\:"-1}] } ]") {
@@ -51,8 +48,8 @@ const api = createApi({
       }),
     }),
 
-    getHipstagramFindOne: builder.query({
-      query: ({ _id }) => ({
+    getFindOne: builder.query({
+      query: ( _id ) => ({
         document: `query GetUser($query: String!) {
                     UserFindOne(query: $query){
                             _id 
@@ -67,15 +64,19 @@ const api = createApi({
                             following { _id }
                       }
                     }`,
-        variables: { query: JSON.stringify({ _id }) },
+        variables: { query: JSON.stringify([{ _id }]) },
       }),
+      providesTags: (result, error, _id) => {
+        //функція, яка створює тег, який ідентіфікує користувача
+        return [{ type: "User", id: _id }];
+      },
     }),
 
-    CreateHipstagramFindOne: builder.mutation({
-      query: ({ user }) => ({
+    createFindOne: builder.mutation({
+      query: ({ user: _id }) => ({
         document: `
-            mutation CreateUser ($userInput: UserInput!) {
-                createUser(user: $userInput) {
+              mutation CreateUser ($user: UserInput!) {
+                UserUpsert(user: $user) {
                     _id
                     login
                     nick
@@ -89,7 +90,7 @@ const api = createApi({
                 }
             }
             `,
-        variables: { user },
+        variables: { user: { _id } },
       }),
     }),
 
@@ -131,14 +132,14 @@ const api = createApi({
                     }
                 }
             `,
-        variables: { post  },
+        variables: { post },
       }),
     }),
 
-    getHipstagramAllLikes: builder.query({
-      query: ({  }) => ({
-        document: `query GetAllLikes {
-                            LikeFind (query: "[{}]"){
+    getAllLikes: builder.query({
+      query: ( _id ) => ({
+        document: `query getAllLikes($query: String!) {
+                            LikeFind (query: $query){
                                 _id 
                                 post { _id }
                                 comment { _id text }
@@ -146,30 +147,29 @@ const api = createApi({
                                 owner { _id login }
                         }
                     }`,
-        variables: { },
+        variables: {query: JSON.stringify([{ _id }])},
       }),
+      invalidatesTags: (result, error, arg) => [{ type: "Like", id: arg._id }], 
     }),
 
-    createHipstagramLikes: builder.mutation({
-      query: ({ user }) => ({
+    createLikes: builder.mutation({
+      query: (    { post:  _id  }  ) => ({
         document: `
-                mutation CreateLike($likeInput: LikeInput!) {
-                    LikeUpsert(likeInput: $likeInput) {
+                mutation CreateLikes($like: LikeInput!) {
+                    LikeUpsert(like: $like) {
                         _id 
                         post { _id }
-                        comments { _id text }
-                        directs { _id  }
                         owner { _id login }
                     }
                 }
             `,
-        variables: { user },
+        variables: {   like: { post: {_id } } },
       }),
     }),
 
-    getHipstagramImage: builder.query({
-        query: ({ }) => ({
-          document: `query GetImage{
+    getImage: builder.query({
+      query: ({}) => ({
+        document: `query GetImage{
                             ImageFind (query: "{}"){
                                 _id 
                                 text
@@ -181,13 +181,13 @@ const api = createApi({
                                 owner { _id login }
                         }
                     }`,
-          variables: {  },
-        }),
+        variables: {},
       }),
-  
-    createHipstagramImage: builder.mutation({
-        query: ({ }) => ({
-          document: `
+    }),
+
+    createImage: builder.mutation({
+      query: ({}) => ({
+        document: `
                     mutation CreateImage ($image: ImageInput!) {
                         ImageUpsert(image: $image) {
                             _id
@@ -203,9 +203,9 @@ const api = createApi({
                         }
                     }
               `,
-          variables: { },
-        }),
+        variables: {},
       }),
+    }),
 
     login: builder.mutation({
       query: ({ login, password }) => ({
@@ -233,12 +233,12 @@ const api = createApi({
     }),
 
     getUserById: builder.query({
-      query: ({ _id }) => ({
+      query: ( _id ) => ({
         document: `query oneUser($query: String){
-                UserFindOne(query: $query){
-                    _id login nick avatar{ url } 
-                }
-            }`,
+                        UserFindOne(query: $query){
+                            _id login nick avatar{ url } 
+                        }
+                    }`,
         variables: { query: JSON.stringify([{ _id }]) },
       }),
       providesTags: (result, error, { _id }) => {
@@ -260,8 +260,6 @@ const api = createApi({
       }),
       invalidatesTags: (result, error, arg) => [{ type: "User", id: arg._id }], //функція, яка розповідає, яких саме користувачів перетворити на інвалідів
     }),
-
-
   }),
 });
 
@@ -307,7 +305,34 @@ export const authSlice = createSlice({
     // }
     aboutMe(state, { payload }) {
       state.userInfo = payload;
+      console.log("aboutMeaboutMe", state, state.userInfo);
     },
+  },
+
+  addLike(state, action) {
+    const { postId, like } = action.payload;
+    const postLikes = state.likes.find((item) => item.postId === postId);
+    if (postLikes) {
+      postLikes.likes.push(like);
+    } else {
+      state.likes.push({ postId, likes: [like] });
+    }
+  },
+
+  removeLike(state, action) {
+    const { postId, likeId } = action.payload;
+    const postLikes = state.likes.find((item) => item.postId === postId);
+    if (postLikes) {
+      postLikes.likes = postLikes.likes.filter((like) => like._id !== likeId);
+    }
+  },
+
+  updateLikesCount(state, action) {
+    const { postId, newLikesCount } = action.payload;
+    const postLikes = state.likes.find((item) => item.postId === postId);
+    if (postLikes) {
+      postLikes.likesCount = newLikesCount;
+    }
   },
 
   extraReducers: (builder) => {
@@ -383,7 +408,7 @@ export const actionFullLogin = (login, password) => async (dispatch) => {
 
 // const actionAuthLogin = payload => ({type: "auth/login", payload})
 
-const actionAboutMe = () => async (dispatch, getState) => {
+export const actionAboutMe = () => async (dispatch, getState) => {
   const { auth } = getState();
   if (auth.payload) {
     const { id } = auth.payload.sub;
@@ -396,15 +421,69 @@ const actionAboutMe = () => async (dispatch, getState) => {
   }
 };
 
+
+export const addLikeToPost = (postId, like) => async (dispatch) => {
+  try {
+    // Відправляємо запит на додавання лайка до поста
+    const data = await dispatch(api.endpoints.createLikes.initiate({ post: postId }));
+    
+    // Якщо запит успішний, виконуємо дію додавання лайка до стейту
+    if (data.LikeUpsert) {
+      dispatch(authSlice.actions.addLike({ postId, like }));
+      // Опціонально: оновлюємо кількість лайків для поста
+      dispatch(updateLikesCountForPost(postId));
+    }
+  } catch (error) {
+    console.error("Помилка при додаванні лайка до поста:", error);
+  }
+};
+
+export const removeLikeFromPost = (postId, likeId) => async (dispatch) => {
+  try {
+    // Відправляємо запит на видалення лайка з поста
+    const data = await dispatch(api.endpoints.removeLikes.initiate({ postId, likeId }));
+    
+    // Якщо запит успішний, виконуємо дію видалення лайка з стейту
+    if (data.LikeRemove) {
+      dispatch(authSlice.actions.removeLike({ postId, likeId }));
+      // Опціонально: оновлюємо кількість лайків для поста
+      dispatch(updateLikesCountForPost(postId));
+    }
+  } catch (error) {
+    console.error("Помилка при видаленні лайка з поста:", error);
+  }
+};
+
+export const updateLikesCountForPost = (postId) => async (dispatch) => {
+  try {
+    // Отримуємо оновлені дані про всі лайки для поста
+    const likesData = await dispatch(api.endpoints.getAllLikes.initiate({ postId }));
+    
+    // Якщо є оновлені дані про лайки, оновлюємо кількість лайків для поста
+    if (likesData.data?.LikeFind) {
+      const updatedLikes = likesData.data.LikeFind;
+      const newLikesCount = updatedLikes.filter((like) => like.post._id === postId).length;
+      dispatch(authSlice.actions.updateLikesCount({ postId, newLikesCount }));
+    }
+  } catch (error) {
+    console.error("Помилка при оновленні кількості лайків для поста:", error);
+  }
+};
+
+
 export const { setUserData } = authSlice.actions;
 export const {
-  getHipstagramFind,
-  getHipstagramPost,
-  getHipstagramFindOne,
-  useGetRootCatsQuery,
+  useGetFindQuery,
+  useGetFindOneQuery,
   useGetHipstagramPostQuery,
-  useLoginMutation,
+  useGetAllLikesQuery,
+  useGetImageQuery,
   useGetUserByIdQuery,
+
+  useCreateFindOneMutation,
+  useCreateLikesMutation,
+  useCreateImageMutation,
+  useLoginMutation,
   useFullRegisterMutation,
-  useGetHipstagramFindQuery
+  useSetUserNickMutation,
 } = api;

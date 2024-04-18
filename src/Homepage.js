@@ -1,36 +1,44 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./Homepage.css";
-// import Timeline from "./timeline/Timeline";
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
-import ExploreIcon from '@mui/icons-material/Explore';
 import SlideshowIcon from '@mui/icons-material/Slideshow';
 import ChatIcon from '@mui/icons-material/Chat';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
-import MenuIcon from '@mui/icons-material/Menu';
-import {Router, Route, Link, Redirect, useParams, Switch} from 'react-router-dom';
+import {Router, Route, Link, Switch} from 'react-router-dom';
 import createHistory from "history/createBrowserHistory";
 import UserPage  from "./userPage/UserPage";
 import PageMain from "./timeline/PageMain";
-import UserBadge from "./userBadge/UserBadge";
-import { useDispatch } from 'react-redux';
-import { authSlice, useLoginMutation } from "./app/_store";
+import User from "./user/user";
+import { useDispatch, useSelector } from 'react-redux';
+import { authSlice, useGetFindOneQuery } from "./app/_store";
 
 
 
 const history = createHistory()
 
 const Aside = () => {
-	const { data: response, error, isLoading } = useLoginMutation() // ?
 	const dispatch = useDispatch()
-	console.log("response", response)
+
+	const { data: response, error, isLoading } = useGetFindOneQuery() // ?
+
 
 	const handleLogout = () => {
 		localStorage.removeItem('token');
 		dispatch(authSlice.actions.logout());
+		history.push(`/`);
 	};
+
+	const user = useSelector(state => state.auth.userInfo);
+	console.log("userAside", user);
+
+	if (isLoading) {
+		return (
+			<p className="pagemain__loading">Завантаження...</p>
+		)
+	}
 
 	return (
 		<aside>
@@ -68,8 +76,14 @@ const Aside = () => {
 				<Link to="/pageabout">Створити</Link>
 			</button>
 			<button className="sidenave__btn">
-                <UserBadge nick={"Я"} _id={"001"}/>
+				<User 
+					key={user?._id} 
+					_id={user?._id} 
+					login={user?.login}
+					avatar={user?.avatar}
+				/>
 			</button>
+			
 			{/* <li>
 			    <Link to="/post/1">POST 1</Link>
 			</li> */}

@@ -2,11 +2,14 @@
     display: flex;
     align-items: center;
     color: white;
-
+    
 }
 
 .comment__name {
     font-size: 14px;
     font-weight: bolder;
     margin: 0 5px 0 5px;
+}
+.comment__text {
+    word-wrap: break-word;
 }

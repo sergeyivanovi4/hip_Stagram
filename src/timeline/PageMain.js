@@ -1,4 +1,4 @@
-import React, { useState, useEffect  } from "react";
+import React, { useState } from "react";
 import { useSelector } from 'react-redux';
 import Sugesstions from "./Sugesstions";
 import "./PageMain.css";
@@ -9,8 +9,12 @@ import InfiniteScroll from "react-infinite-scroll-component";
 
 function PageMain() {
 
-        const { data: response, error, isLoading } = useGetHipstagramPostQuery(); 
-    console.log("response", response);
+    const { data: response, error, isLoading } = useGetHipstagramPostQuery(); 
+    console.log("responsePageMain", response);
+
+    const user = useSelector(state => state.auth.userInfo);
+	console.log("userPageMain", user);
+    
 
         const [itemsToShow, setItemsToShow] = useState(5); // Кількість постів, які відображаються на старті
         const loadMoreItems = () => {
@@ -36,6 +40,7 @@ function PageMain() {
                                     _id={post._id}
                                     user={post.owner.login}
                                     postImage={post.images && post.images[0] && post.images[0].url}
+                                    likesCountProp={post?.likesCount}
                                     likes={post.likes}
                                     text={post.text}
                                     comments={post.comments}

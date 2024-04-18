@@ -8,7 +8,7 @@ function Comment({
   return (
     <div className='comment'>
         <span className='comment__name'>{_id}: </span>
-        <span >{text}</span>
+        <span className='comment__text'>{text}</span>
 
     </div>
   )

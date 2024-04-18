@@ -1,18 +1,23 @@
-.user__badge__root {
+.user__root {
     display: flex;
     align-items: center;
     /* justify-content: center; */
     cursor: pointer;
+
+    &:hover div {
+        background-color: black;
+    }
 }
 
-.user__badge__avatar{
+
+.user__avatar{
     width: 40px;
     height: 40px;
     margin-right: 10px;
     border-radius: 50%;
 }
 
-.user_badge_placeholder{
+.user__placeholder{
     width: 40px;
     height: 40px;
     margin-right: 10px;
@@ -20,9 +25,11 @@
     background-color: #e6e6e6;
 }
 
-.user__badge__name{
-    font-size: 14px;
+.user__name {
+    padding-left: 10px;
+    font-size: 16px;
     font-weight: bolder;
     color: white;
-    padding-left: 10px;
 }
+
+
