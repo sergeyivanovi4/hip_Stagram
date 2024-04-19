@@ -1,7 +1,7 @@
 // Post.js
-import React, { useState, useSelector } from 'react';
+import React, { useState} from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Avatar from '@mui/material/Avatar';
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -9,7 +9,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import { useCreateLikesMutation, useGetAllLikesQuery } from "../../app/_store"
+import { addLikeToPost, removeLikeFromPost, updateLikesCountForPost } from "../../app/_store";
 import './Post.css';
 import Likes from "./Likes"
 import UserBadge from '../../userBadge/UserBadge';
@@ -19,14 +19,16 @@ const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function Post({
     owner, _id, likes, text, postImage, comments, user, likesCountProp
-}) {
+}) 
+{
+    const dispatch = useDispatch();
+    const auth = useSelector(state => state.auth); 
     const [isCommentsShown, setIsCommentsShown] = useState(false);
 
+   
 console.log("comments", comments);
 console.log("postImage", postImage);
 console.log("likes", likes);
-console.log("owner", owner);
-console.log("user", user);
 console.log("likesCountProp", likesCountProp);
 
     const renderComments = () => {
@@ -68,41 +70,46 @@ console.log("likesCountProp", likesCountProp);
         };
         
 
-        // const [isLiked, setIsLiked] = useState(likes);
-        const [likesCount, setLikesCount] = useState(likesCountProp);
-        const [createLikes] = useCreateLikesMutation();
-        const { getAllLikes }  = useGetAllLikesQuery();
+        // // const [isLiked, setIsLiked] = useState(likes);
+        // const [likesCount, setLikesCount] = useState(likesCountProp);
+        // const [createLikes] = useCreateLikesMutation();
+        // const { getAllLikes }  = useGetAllLikesQuery();
+       
         
-        const calculateNewLikesCount = (currentLikesCount, newLikeData) => {
 
-            const currentCount = currentLikesCount || 0;
-            if (newLikeData) {
-                return currentCount +1 ;
-            } else {
-                return currentCount  ;
-            }
-        };
+        // const handleLikeToggle = () => {
+        //     const alreadyLiked = likes.find((like) => like._id=== _id);
+        //     if (alreadyLiked) {
+        //         dispatch(removeLikeFromPost(_id, alreadyLiked._id));
+        //     } else {
+        //         dispatch(addLikeToPost(_id, { /* об'єкт з даними лайку */ }));
+        //     }
+        //     dispatch(updateLikesCountForPost(_id));
+        // };
+        const { id } = auth.payload.sub;
+        const Liked = likes.find((like) => like.owner._id === id);
 
-        const handleLikeToggle = async () => {
+        console.log("alreadyLiked  id ", Liked);
+        
+       
+        const handleLikeToggle = () => {
 
-            try {
-                const likeInput = { 
-                    like: {
-                        post: { _id }
-                    }
-                };
-                const { data } = await createLikes({ like: likeInput });
-                console.log("datahandleLikeToggle", data)
+            if (auth?.payload) {
 
-                if (data.LikeUpsert) {
-                    // Оновлюємо кількість лайків, якщо відомі
-                    const newLikesCount = calculateNewLikesCount(likesCount, data.LikeUpsert);
-                    setLikesCount(newLikesCount);
-                    console.log("newLikesCount", newLikesCount)
+                if (!Liked) {
+                    dispatch(addLikeToPost( _id ));
+                    // setChecked(true);
+                    console.log("працює   dispatch(addLikeToPost(_id));");
+                } else {
+                    const { _id } = Liked
+                    console.log("LikedId  id ", _id);
+                    dispatch(removeLikeFromPost(_id));
+                    // setChecked(false);
+                    console.log("працює    dispatch(removeLikeFromPost(_id, alreadyLiked._id));");
                 }
-
-            } catch (error) {
-                console.error("Помилка при лайканні фото:", error);
+                
+                dispatch(updateLikesCountForPost(_id));
+                console.log("працює   dispatch(updateLikesCountForPost(_id));");
             }
         };
         
@@ -125,8 +132,8 @@ console.log("likesCountProp", likesCountProp);
                             icon={<FavoriteBorder />} 
                             checkedIcon={<Favorite />} 
                             className='postIcon' 
+                            checked={Liked || false}
                             onChange={handleLikeToggle}
-                            // checked={0}
                         />
                         <Checkbox {...label} icon={<ChatBubbleOutlineIcon />} checkedIcon={<ChatBubbleOutlineIcon />} className='postIcon' />
                         <Checkbox {...label} icon={<TelegramIcon />} checkedIcon={<TelegramIcon />} className='postIcon' />
@@ -142,8 +149,6 @@ console.log("likesCountProp", likesCountProp);
                 </div>
                 <div className='post__footer__likes'>
                         Має {likes.length} вподобайку
-
-                     Має <Likes likesCount={likesCountProp} likes={likes} /> вподобайку
                 </div>
                 <div className='post__comment'>
                     {renderComments()}
@@ -152,11 +157,11 @@ console.log("likesCountProp", likesCountProp);
                     className='post__textarea' 
                     value={commentValue} 
                     onChange={handleCommentChange} 
-                    // onClick={() => setActiveTextarea(_id)} 
                 />
             </div>
         </div>
     );
 }
+
 
 export default Post;

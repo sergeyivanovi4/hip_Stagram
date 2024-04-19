@@ -32,9 +32,9 @@ function App() {
 
   const user = useSelector(state => state.auth.token);
 
-  console.log("userAPP", user);
+
   // const [{isLoading, data}] = useLoginMutation()
-  // console.log("data", data);
+
 
   useEffect(() => {
     const token = localStorage.getItem('token');

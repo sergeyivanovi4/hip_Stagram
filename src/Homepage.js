@@ -7,7 +7,7 @@ import ChatIcon from '@mui/icons-material/Chat';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import LogoutIcon from '@mui/icons-material/Logout';
-import {Router, Route, Link, Switch} from 'react-router-dom';
+import {Router, Route, Link, Switch, useHistory } from 'react-router-dom';
 import createHistory from "history/createBrowserHistory";
 import UserPage  from "./userPage/UserPage";
 import PageMain from "./timeline/PageMain";
@@ -21,7 +21,7 @@ const history = createHistory()
 
 const Aside = () => {
 	const dispatch = useDispatch()
-
+	const history = useHistory();
 	const { data: response, error, isLoading } = useGetFindOneQuery() // ?
 
 
@@ -31,8 +31,8 @@ const Aside = () => {
 		history.push(`/`);
 	};
 
-	const user = useSelector(state => state.auth.userInfo);
-	console.log("userAside", user);
+	const user = useSelector(state => state.auth?.userInfo);
+	console.log("user!!!!!!!!", user)
 
 	if (isLoading) {
 		return (

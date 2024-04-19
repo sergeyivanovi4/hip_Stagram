@@ -23,7 +23,7 @@ const api = createApi({
         //якщо ми залогінени
         headers.set("Authorization", "Bearer " + token); //додаємо токен до заголовків
       }
-      console.log("auth!!!!", getState().auth);
+      console.log("auth!!!!", getState().auth, token);
       return headers;
     },
   }),
@@ -49,7 +49,7 @@ const api = createApi({
     }),
 
     getFindOne: builder.query({
-      query: ( _id ) => ({
+      query: (  id ) => ({
         document: `query GetUser($query: String!) {
                     UserFindOne(query: $query){
                             _id 
@@ -64,7 +64,7 @@ const api = createApi({
                             following { _id }
                       }
                     }`,
-        variables: { query: JSON.stringify([{ _id }]) },
+        variables: { query: JSON.stringify([{ _id: id}]) },
       }),
       providesTags: (result, error, _id) => {
         //функція, яка створює тег, який ідентіфікує користувача
@@ -106,7 +106,10 @@ const api = createApi({
                                 comments { _id text }
                                 directs { _id }
                                 collections { _id }
-                                likes { _id }
+                                likes { _id 
+                                  owner {
+                                      _id login
+                                    }}
                                 likesCount
                                 owner {
                                     _id login
@@ -115,6 +118,34 @@ const api = createApi({
     } `,
         variables: {},
       }),
+    }),
+
+    getPostOne: builder.query({
+      query: (_id) => ({
+        document: `    
+            query GetPostOne($query: String!){
+                            PostFind(query: $query ){
+                                _id 
+                                createdAt
+                                text
+                                images { _id url }
+                                comments { _id text }
+                                directs { _id }
+                                collections { _id }
+                                likes { _id 
+                                        owner {
+                                            _id login
+                                          }}
+                                likesCount
+                                owner {
+                                    _id login
+                                }
+                            }
+    } `,
+        variables: { query : JSON.stringify([{ _id }])},
+      }),
+      providesTags: (result, error, _id) => [{ type: "Post", _id: _id }], 
+
     }),
 
     createHipstagramPost: builder.mutation({
@@ -137,7 +168,7 @@ const api = createApi({
     }),
 
     getAllLikes: builder.query({
-      query: ( _id ) => ({
+      query: (_id) => ({
         document: `query getAllLikes($query: String!) {
                             LikeFind (query: $query){
                                 _id 
@@ -147,13 +178,13 @@ const api = createApi({
                                 owner { _id login }
                         }
                     }`,
-        variables: {query: JSON.stringify([{ _id }])},
+        variables: { query: JSON.stringify(  {_id}  ) },
       }),
-      invalidatesTags: (result, error, arg) => [{ type: "Like", id: arg._id }], 
+      // invalidatesTags: (result, error, arg) => [{ type: "Like", _id: arg._id }], 
     }),
 
     createLikes: builder.mutation({
-      query: (    { post:  _id  }  ) => ({
+      query: (  _id ) => ({
         document: `
                 mutation CreateLikes($like: LikeInput!) {
                     LikeUpsert(like: $like) {
@@ -165,6 +196,23 @@ const api = createApi({
             `,
         variables: {   like: { post: {_id } } },
       }),
+        invalidatesTags: (result, error, _id ) => [{ type: "Post", _id: _id }],  
+    }),
+
+    likeDelete: builder.mutation({
+      query: (    _id    ) => ({
+        document: `
+                mutation DeleteLike($like: LikeInput!) {
+                  LikeDelete(like: $like) {
+                        _id 
+                        post { _id }
+                        owner { _id login }
+                    }
+                }
+            `,
+        variables: {   like:{ _id }  },
+      }),
+      invalidatesTags: (result, error, _id) => [{ type: "Post", _id: _id }], 
     }),
 
     getImage: builder.query({
@@ -234,14 +282,14 @@ const api = createApi({
 
     getUserById: builder.query({
       query: ( _id ) => ({
-        document: `query oneUser($query: String){
+        document: `query oneUser($query: String!){
                         UserFindOne(query: $query){
                             _id login nick avatar{ url } 
                         }
                     }`,
-        variables: { query: JSON.stringify([{ _id }]) },
+        variables: { query: JSON.stringify([{ }]) },
       }),
-      providesTags: (result, error, { _id }) => {
+      providesTags: (result, error,  _id ) => {
         //функція, яка створює тег, який ідентіфікує користувача
         return [{ type: "User", id: _id }];
       },
@@ -263,7 +311,7 @@ const api = createApi({
   }),
 });
 
-console.log("api", api);
+
 
 function jwtDecode(token) {
   try {
@@ -285,7 +333,7 @@ export const authSlice = createSlice({
     //   state.userData = action.payload;
     // },
     login(state, { payload: token }) {
-      console.log("LOGIN", state, token);
+
       const payload = jwtDecode(token);
       if (payload) {
         state.payload = payload;
@@ -295,7 +343,7 @@ export const authSlice = createSlice({
       // return {payload, token}
     },
     logout(state) {
-      // console.log('LOGOUT', state)
+
       state.payload = null;
       state.token = null;
       state.userInfo = null;
@@ -307,48 +355,52 @@ export const authSlice = createSlice({
       state.userInfo = payload;
       console.log("aboutMeaboutMe", state, state.userInfo);
     },
-  },
 
-  addLike(state, action) {
-    const { postId, like } = action.payload;
-    const postLikes = state.likes.find((item) => item.postId === postId);
-    if (postLikes) {
-      postLikes.likes.push(like);
-    } else {
-      state.likes.push({ postId, likes: [like] });
-    }
-  },
-
-  removeLike(state, action) {
-    const { postId, likeId } = action.payload;
-    const postLikes = state.likes.find((item) => item.postId === postId);
-    if (postLikes) {
-      postLikes.likes = postLikes.likes.filter((like) => like._id !== likeId);
-    }
-  },
-
-  updateLikesCount(state, action) {
-    const { postId, newLikesCount } = action.payload;
-    const postLikes = state.likes.find((item) => item.postId === postId);
-    if (postLikes) {
-      postLikes.likesCount = newLikesCount;
-    }
-  },
-
-  extraReducers: (builder) => {
-    //це додаткові редьюсери
-    builder.addMatcher(
-      //редьюсер, який спрацьовує коли завантажиться токен
-      api.endpoints.login.matchFulfilled,
-      (state, { payload }) => {
-        state.token = payload.token;
-        state.user = payload.user;
+    
+    addLike(state, action) {
+      const { _id, like } = action.payload;
+      const postLikes = state.likes.find((item) => item.post._id === _id);
+      console.log("addLike", _id, like);
+      if (postLikes) {
+        postLikes.likes.push(_id);
+      } else {
+        state.likes.push({ _id, likes: [_id] });
       }
-    );
+    },
+
+    removeLike(state, action) {
+      const { _id, like } = action.payload;
+      const postLikes = state.likes.find((item) => item.post._id === _id);
+      console.log("removeLike", _id, like);
+      if (postLikes) {
+        postLikes.likes = postLikes.likes.filter((like) => like._id !== like);
+      }
+    },
+
+    updateLikesCount(state, action) {
+      const { _id,  newLikesCount } = action.payload;
+      const postLikes = state.likes.find((item) => item.likes._id === _id);
+      console.log("updateLikesCount", _id);
+      if (postLikes) {
+        postLikes.likesCount = newLikesCount;
+      }
+    },
   },
+
+
+    extraReducers: (builder) => {
+      //це додаткові редьюсери
+      builder.addMatcher(
+        //редьюсер, який спрацьовує коли завантажиться токен
+        api.endpoints.login.matchFulfilled,
+        (state, { payload }) => {
+          state.token = payload.token;
+          state.user = payload.user;
+        }
+      );
+    },
 });
 
-console.log("authSlice", authSlice);
 
 //
 // Створюємо reducer для api та authSlice
@@ -375,20 +427,19 @@ const persistor = persistStore(store);
 
 // Підписуємось на зміни у сторі та виводимо їх у консоль
 store.subscribe(() => console.log(store.getState()));
-console.log("store", store);
-console.log("store.getState", store.getState());
+
 // export const store = createStore(rootReducers);
 
 export const actionFullRegister = (login, password) => async (dispatch) => {
   const token = await dispatch(
     api.endpoints.fullRegister.initiate({ login, password })
   );
-  console.log("actionFullRegister token", token);
+
 
   if (token?.createUser) {
     await dispatch(actionFullLogin(login, password));
   } else {
-    console.log("actionFullRegister token", token);
+
     alert("Ввели не вірний логін чи пароль, спробуйте щє раз");
   }
 };
@@ -397,7 +448,7 @@ export const actionFullLogin = (login, password) => async (dispatch) => {
   const token = await dispatch(
     api.endpoints.login.initiate({ login, password })
   ); //найцікавіше - як отримати з api звичайний thunk
-  console.log("tokentoken", token);
+
   if (token?.data?.login) {
     dispatch(authSlice.actions.login(token.data.login));
     await dispatch(actionAboutMe()); //запит на інформацію о поточном користувачі
@@ -406,14 +457,13 @@ export const actionFullLogin = (login, password) => async (dispatch) => {
   }
 };
 
-// const actionAuthLogin = payload => ({type: "auth/login", payload})
 
 export const actionAboutMe = () => async (dispatch, getState) => {
   const { auth } = getState();
   if (auth.payload) {
     const { id } = auth.payload.sub;
     const user = await dispatch(
-      api.endpoints.getUserById.initiate({ _id: id })
+      api.endpoints.getFindOne.initiate( id )
     );
     console.log("userActionAboutMe", user);
 
@@ -422,48 +472,49 @@ export const actionAboutMe = () => async (dispatch, getState) => {
 };
 
 
-export const addLikeToPost = (postId, like) => async (dispatch) => {
+export const addLikeToPost = (_id ) => async (dispatch) => {
   try {
     // Відправляємо запит на додавання лайка до поста
-    const data = await dispatch(api.endpoints.createLikes.initiate({ post: postId }));
-    
+    const data = await dispatch(api.endpoints.createLikes.initiate( _id ));
+    console.log("dataaddLikeToPost", data);
     // Якщо запит успішний, виконуємо дію додавання лайка до стейту
     if (data.LikeUpsert) {
-      dispatch(authSlice.actions.addLike({ postId, like }));
+      dispatch(authSlice.actions.addLike( { _id,  like: { /* об'єкт з даними лайку */ }  } ));
       // Опціонально: оновлюємо кількість лайків для поста
-      dispatch(updateLikesCountForPost(postId));
+      dispatch(updateLikesCountForPost(_id));
     }
   } catch (error) {
     console.error("Помилка при додаванні лайка до поста:", error);
   }
 };
 
-export const removeLikeFromPost = (postId, likeId) => async (dispatch) => {
+export const removeLikeFromPost = ( _id) => async (dispatch) => {
   try {
     // Відправляємо запит на видалення лайка з поста
-    const data = await dispatch(api.endpoints.removeLikes.initiate({ postId, likeId }));
-    
+    const data = await dispatch(api.endpoints.likeDelete.initiate( _id ));
+    console.log("removeLikeFromPost", data);
     // Якщо запит успішний, виконуємо дію видалення лайка з стейту
-    if (data.LikeRemove) {
-      dispatch(authSlice.actions.removeLike({ postId, likeId }));
+    if (data.LikeDelete) {
+      dispatch(authSlice.actions.removeLike( { _id, like: _id }));
       // Опціонально: оновлюємо кількість лайків для поста
-      dispatch(updateLikesCountForPost(postId));
+      dispatch(updateLikesCountForPost( _id));
     }
   } catch (error) {
     console.error("Помилка при видаленні лайка з поста:", error);
   }
 };
 
-export const updateLikesCountForPost = (postId) => async (dispatch) => {
+export const updateLikesCountForPost = (  _id  ) => async (dispatch) => {
   try {
     // Отримуємо оновлені дані про всі лайки для поста
-    const likesData = await dispatch(api.endpoints.getAllLikes.initiate({ postId }));
-    
+    const likesData = await dispatch(api.endpoints.getPostOne.initiate(_id));
+    console.log("likesData", likesData, _id );
     // Якщо є оновлені дані про лайки, оновлюємо кількість лайків для поста
-    if (likesData.data?.LikeFind) {
-      const updatedLikes = likesData.data.LikeFind;
-      const newLikesCount = updatedLikes.filter((like) => like.post._id === postId).length;
-      dispatch(authSlice.actions.updateLikesCount({ postId, newLikesCount }));
+    if (likesData.data?.PostFind?.likes) {
+      const updatedLikes = likesData.data.PostFind.likes;
+      const newLikesCount = updatedLikes.filter((likes) => likes._id ===  _id ).length;
+      dispatch(authSlice.actions.updateLikesCount( _id , newLikesCount ));
+      console.log("newLikesCount", newLikesCount, updatedLikes);
     }
   } catch (error) {
     console.error("Помилка при оновленні кількості лайків для поста:", error);
@@ -479,6 +530,7 @@ export const {
   useGetAllLikesQuery,
   useGetImageQuery,
   useGetUserByIdQuery,
+  useGetPostOneQuery,
 
   useCreateFindOneMutation,
   useCreateLikesMutation,

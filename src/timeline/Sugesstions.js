@@ -11,7 +11,7 @@ function Sugesstions({
     user,
     children
 }) {
-    console.log("userSugesstions", user);
+
 
   return (
     <div className='sugesstion'>

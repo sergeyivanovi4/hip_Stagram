@@ -12,7 +12,7 @@ function UserBadge({
     user,
     children
 }) {
-    console.log("userUserBadge", user);
+
     const history = useHistory();
 
     const onUserBadgeClick = () => {

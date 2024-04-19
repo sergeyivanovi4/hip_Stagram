@@ -3,17 +3,17 @@ import { useSelector } from 'react-redux';
 import Sugesstions from "./Sugesstions";
 import "./PageMain.css";
 import Post from "./posts/Post"
-import { getHipstagramPost, useGetHipstagramPostQuery, useGetHipstagramFindQuery } from "../app/_store"
+import { getHipstagramPost, useGetHipstagramPostQuery, useGetHipstagramFindQuery, useGetPostOneQuery } from "../app/_store"
 import InfiniteScroll from "react-infinite-scroll-component";
 
 
 function PageMain() {
 
-    const { data: response, error, isLoading } = useGetHipstagramPostQuery(); 
-    console.log("responsePageMain", response);
+    const { data: response, error, isLoading } = useGetPostOneQuery(); 
+
 
     const user = useSelector(state => state.auth.userInfo);
-	console.log("userPageMain", user);
+
     
 
         const [itemsToShow, setItemsToShow] = useState(5); // Кількість постів, які відображаються на старті

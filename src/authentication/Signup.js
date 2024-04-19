@@ -12,8 +12,8 @@ function Signup() {
     const dispatch = useDispatch()
 
     const [fullRegisterMutation, {isLoading, data}] = useFullRegisterMutation()  //
-    console.log('LOGIN FORM', isLoading, data)                   // перерорбити реєстрацію
-    // console.log("store.getState", store.getState());             ///
+               // перерорбити реєстрацію
+        ///
     // const dispatch = useDispatch()
 
     const handleSubmit = async (e) => {
