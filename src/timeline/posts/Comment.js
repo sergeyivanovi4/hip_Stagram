@@ -9,7 +9,6 @@ function Comment({
     <div className='comment'>
         <span className='comment__name'>{_id}: </span>
         <span className='comment__text'>{text}</span>
-
     </div>
   )
 }

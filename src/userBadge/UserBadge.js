@@ -19,6 +19,9 @@ function UserBadge({
         history.push(`/${_id}`);
     }
 
+
+
+
   return (
     <div className="user__badge__root" onClick={onUserBadgeClick}>
         {

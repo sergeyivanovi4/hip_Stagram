@@ -10,10 +10,11 @@ import InfiniteScroll from "react-infinite-scroll-component";
 function PageMain() {
 
     const { data: response, error, isLoading } = useGetPostOneQuery(); 
+    console.log("RRRResponsePageMainPageMain", response)
 
 
     const user = useSelector(state => state.auth.userInfo);
-
+    console.log("userPageMainPageMain", user)
     
 
         const [itemsToShow, setItemsToShow] = useState(5); // Кількість постів, які відображаються на старті
@@ -45,6 +46,8 @@ function PageMain() {
                                     text={post.text}
                                     comments={post.comments}
                                     owner={post.owner}
+                                    isLoading={isLoading}
+
                                 />
                             )
                     )}

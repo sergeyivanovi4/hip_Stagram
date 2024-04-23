@@ -9,7 +9,7 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import { addLikeToPost, removeLikeFromPost, updateLikesCountForPost } from "../../app/_store";
+import { addLikeToPost, removeLikeFromPost, updateLikesCountForPost, sendComment } from "../../app/_store";
 import './Post.css';
 import Likes from "./Likes"
 import UserBadge from '../../userBadge/UserBadge';
@@ -18,28 +18,31 @@ import Comment from './Comment';
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function Post({
-    owner, _id, likes, text, postImage, comments, user, likesCountProp
+    owner, _id, likes, text, postImage, comments, user, likesCountProp, isLoading,
+
 }) 
 {
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth); 
     const [isCommentsShown, setIsCommentsShown] = useState(false);
-
-   
-console.log("comments", comments);
+    const [comment, setComment] = useState("")
+    console.log("_idPostPostPostPost", _id);
+    
+// console.log("comments", comments);
 console.log("postImage", postImage);
-console.log("likes", likes);
-console.log("likesCountProp", likesCountProp);
+// console.log("likes", likes);
+// console.log("likesCountProp", likesCountProp);
 
     const renderComments = () => {
         if (comments && comments.length > 2 && !isCommentsShown) {
             const commentCopy = [...comments];
             const commentForRender = commentCopy.splice(comments.length - 2, 2);
+            console.log("commentCopy", commentCopy);
     
             return (
                 <>
                     <span className='post__comment__title' onClick={() => setIsCommentsShown(true)}>
-                        {`Переглянути всі коментарі: ${comments.length - commentForRender.length}`}
+                        {`Переглянути щє ${comments.length - commentForRender.length} коментаря: `}
                     </span>
                     {commentForRender.map((comment) => <Comment key={comment._id} _id={comment._id} text={comment.text} />)}
                 </>
@@ -56,36 +59,7 @@ console.log("likesCountProp", likesCountProp);
             </>
         );
     };
-    
-//
-//
 
-        const [commentValue, setCommentValue] = useState("");
-
-        const handleCommentChange = (event) => {
-            const value = event.target.value;
-            if (value !== "Добавте ваш коментар") { 
-                setCommentValue(value); 
-            }
-        };
-        
-
-        // // const [isLiked, setIsLiked] = useState(likes);
-        // const [likesCount, setLikesCount] = useState(likesCountProp);
-        // const [createLikes] = useCreateLikesMutation();
-        // const { getAllLikes }  = useGetAllLikesQuery();
-       
-        
-
-        // const handleLikeToggle = () => {
-        //     const alreadyLiked = likes.find((like) => like._id=== _id);
-        //     if (alreadyLiked) {
-        //         dispatch(removeLikeFromPost(_id, alreadyLiked._id));
-        //     } else {
-        //         dispatch(addLikeToPost(_id, { /* об'єкт з даними лайку */ }));
-        //     }
-        //     dispatch(updateLikesCountForPost(_id));
-        // };
         const { id } = auth.payload.sub;
         const Liked = likes.find((like) => like.owner._id === id);
 
@@ -98,27 +72,36 @@ console.log("likesCountProp", likesCountProp);
 
                 if (!Liked) {
                     dispatch(addLikeToPost( _id ));
-                    // setChecked(true);
                     console.log("працює   dispatch(addLikeToPost(_id));");
                 } else {
                     const { _id } = Liked
                     console.log("LikedId  id ", _id);
                     dispatch(removeLikeFromPost(_id));
-                    // setChecked(false);
                     console.log("працює    dispatch(removeLikeFromPost(_id, alreadyLiked._id));");
                 }
                 
-                dispatch(updateLikesCountForPost(_id));
-                console.log("працює   dispatch(updateLikesCountForPost(_id));");
             }
         };
         
+
+
+        const onCommentSendClick = () => {
+            if(comment) {
+                dispatch(sendComment(  comment, _id));
+                setComment("");
+            } else {
+                alert("Пустий коментар")
+            }
+        }
+        
+
+
 
     return (
         <div className='post'>
             <div className='post__header'>
                 <div className='post__headerAuthor'>
-                    <UserBadge user={user} />
+                    <UserBadge user={user} _id={_id}/>
                 </div>
             </div>
             <div className='post__image'>
@@ -153,11 +136,22 @@ console.log("likesCountProp", likesCountProp);
                 <div className='post__comment'>
                     {renderComments()}
                 </div>
-                <textarea 
-                    className='post__textarea' 
-                    value={commentValue} 
-                    onChange={handleCommentChange} 
-                />
+
+                <div className='post__textarea__wrapper'> 
+                    <textarea 
+                        className='post__textarea' 
+                        placeholder='Додайте коментар'
+                        value={comment} 
+                        onChange={e => setComment(e.target.value)}
+                    />
+                    <button 
+                        disabled={isLoading}
+                        className='post__textarea__btn'
+                        onClick={() => onCommentSendClick(comment)}
+                    >
+                        Опублікувати
+                    </button>
+                </div>
             </div>
         </div>
     );

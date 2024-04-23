@@ -24,7 +24,7 @@ function User({
     <div>
       <div className="user__root" onClick={onUserClick}>
         {avatar ? (
-          	<img scr={avatar} akt="logo" className="user__avatar" />
+          	<img scr={`http://hipstagram.node.ed.asmer.org.ua/${avatar}`} akt="logo" className="user__avatar" />
 		) : (
 				<Avatar className="user__Avatar" >{login?.[0].toUpperCase()}</Avatar>
 		)}

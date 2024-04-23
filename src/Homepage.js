@@ -80,20 +80,18 @@ const Aside = () => {
 					key={user?._id} 
 					_id={user?._id} 
 					login={user?.login}
-					avatar={user?.avatar}
+					avatar={user?.avatar.url}
+					followers={user?.followers}
+          			following={user?.following}
 				/>
 			</button>
 			
-			{/* <li>
-			    <Link to="/post/1">POST 1</Link>
-			</li> */}
         </div>
 
         <div className="sidenave__more">
                 <button onClick={handleLogout} disabled={isLoading} className="sidenave__btn">
 					Вихід
                 <LogoutIcon />
-
             </button>    
 		</div>
         
