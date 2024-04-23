@@ -9,16 +9,18 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import { addLikeToPost, removeLikeFromPost, updateLikesCountForPost, sendComment } from "../../app/_store";
+import { addLikeToPost, removeLikeFromPost, updateLikesCountForPost, sendComment, useGetFindOneQuery } from "../../app/_store";
 import './Post.css';
 import Likes from "./Likes"
-import UserBadge from '../../userBadge/UserBadge';
 import Comment from './Comment';
+import User from '../../user/user';
+import { useHistory } from 'react-router-dom';
+
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function Post({
-    owner, _id, likes, text, postImage, comments, user, likesCountProp, isLoading,
+    owner, _id, likes, text, postImage, comments, user, likesCountProp, 
 
 }) 
 {
@@ -26,8 +28,13 @@ function Post({
     const auth = useSelector(state => state.auth); 
     const [isCommentsShown, setIsCommentsShown] = useState(false);
     const [comment, setComment] = useState("")
+    const history = useHistory();
+
+
+
+
     console.log("_idPostPostPostPost", _id);
-    
+    console.log("!authauthauthauthauthauthauthauth!", auth);
 // console.log("comments", comments);
 console.log("postImage", postImage);
 // console.log("likes", likes);
@@ -94,18 +101,41 @@ console.log("postImage", postImage);
             }
         }
         
+        const { data: response, error, isLoading } = useGetFindOneQuery(owner?._id) // ?
 
+        console.log("!!responsePageuseruser", response)
+      
+        const userId = response?.UserFindOne
+        console.log("UserPageuseruser", userId)
+
+        // const navigateToUserPage = (userId) => {
+        //     history.push(`/${userId}`);
+        // };
+
+        // const handleUserClick = () => {
+        //         navigateToUserPage(owner?._id);
+        //     };
 
 
     return (
         <div className='post'>
             <div className='post__header'>
-                <div className='post__headerAuthor'>
-                    <UserBadge user={user} _id={_id}/>
+                <div className='post__headerAuthor' >               {/* onClick={handleUserClick} */}
+                    {/* <UserBadge user={user} _id={_id}/> */}
+                    <User 
+                        key={userId?._id} 
+                        _id={userId?._id} 
+                        login={userId?.login}
+                        avatar={userId?.avatar?.url}
+                        nick={userId?.nick}
+                        followers={userId?.followers}
+                        following={userId?.following}
+                    
+                    />
                 </div>
             </div>
             <div className='post__image'>
-                <img src={`http://hipstagram.node.ed.asmer.org.ua/${postImage}`} alt='img' />
+                <img src={`http://hipstagram.node.ed.asmer.org.ua/${postImage}`} alt='img' className='post__image__img' />
             </div>
             <div className='post__footer'>
                 <div className='post__footerIcons'>

@@ -16,19 +16,23 @@ function User({
 
 	const history = useHistory();
 
-	const onUserClick = () => {
-		history.push(`/${_id}`);
-  };
+	const navigateToUserPage = (_id) => {
+        history.push(`/${_id}`);
+    };
+
+    const handleUserClick = () => {
+        navigateToUserPage(_id);
+    };
 
   return (
     <div>
-      <div className="user__root" onClick={onUserClick}>
+      <div className="user__root" onClick={handleUserClick}>
         {avatar ? (
-          	<img scr={`http://hipstagram.node.ed.asmer.org.ua/${avatar}`} akt="logo" className="user__avatar" />
+          	<img src={`http://hipstagram.node.ed.asmer.org.ua/${avatar}`} alt="logo" className="user__avatar" />
 		) : (
 				<Avatar className="user__Avatar" >{login?.[0].toUpperCase()}</Avatar>
 		)}
-        <span className="user__name">{login}</span>
+        <span className="user__name">{nick || login}</span>
       </div>
     </div>
   );

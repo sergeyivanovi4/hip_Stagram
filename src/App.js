@@ -48,7 +48,7 @@ function App() {
       <BrowserRouter>
 			  <Route>
 
-        {user ? <Homepage /> : <Authenticate />}
+          {user ? <Homepage /> : <Authenticate />}
 
         </Route>
 			</BrowserRouter>

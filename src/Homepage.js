@@ -81,6 +81,7 @@ const Aside = () => {
 					_id={user?._id} 
 					login={user?.login}
 					avatar={user?.avatar.url}
+					nick={user?.nick}
 					followers={user?.followers}
           			following={user?.following}
 				/>
@@ -128,7 +129,6 @@ const PageAbout = () =>
 	<h2>
 		Мій профіль: 
 	</h2>
-	{/* <ProfileScreen name={'Serhii'} description={'cool_man'}  /> */}
 </>
 
 
@@ -149,10 +149,10 @@ function Homepage() {
                     <Switch>
                             <Route path="/" component = { PageMain } exact />
                             <Route path="/search" component = { Search } exact  />
-                            <Route path="/:_id" component = { UserPage } exact  />
+							<Route path="/:_id" render={(props) => <UserPage _id={props.match.params._id} />} exact />
                             <Route path="/news" component = { News } exact  />
                             <Route path="/pageabout" component = { PageAbout } exact  />
-                            {/* <Route path="/post/:_id" component = { PagePost } /> */}
+
                             <Page404 />
                     </Switch>               
                 </div>

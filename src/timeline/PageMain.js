@@ -17,9 +17,8 @@ function PageMain() {
     console.log("userPageMainPageMain", user)
     
 
-        const [itemsToShow, setItemsToShow] = useState(5); // Кількість постів, які відображаються на старті
+        const [itemsToShow, setItemsToShow] = useState(5); 
         const loadMoreItems = () => {
-            // При кожному виклику функції loadMoreItems додаємо 5 до кількості відображуваних елементів
             setItemsToShow(itemsToShow + 5);
         };
 
@@ -31,7 +30,7 @@ function PageMain() {
                 <InfiniteScroll
                      dataLength={itemsToShow}
                      next={loadMoreItems}
-                     hasMore={response?.PostFind?.length > itemsToShow} // Перевірка, чи є ще елементи для завантаження
+                     hasMore={response.PostFind.length > itemsToShow} // Перевірка, чи є ще елементи для завантаження
                      loader={<p className="pagemain__loading">Завантаження...</p>}
                      endMessage={<p className="pagemain__loading">ВСЕ! Кінец.</p>} // Повідомлення, яке відображається після завантаження всіх елементів
                 >
@@ -47,7 +46,6 @@ function PageMain() {
                                     comments={post.comments}
                                     owner={post.owner}
                                     isLoading={isLoading}
-
                                 />
                             )
                     )}

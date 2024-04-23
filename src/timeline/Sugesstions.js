@@ -1,7 +1,7 @@
 import React from 'react';
 import "./Sugesstions.css";
 import Avatar from '@mui/material/Avatar';
-import UserBadge from "../userBadge/UserBadge"
+import User from '../user/user';
 
 
 function Sugesstions({
@@ -19,7 +19,7 @@ function Sugesstions({
             for you
         </div>
         
-        <UserBadge user={user} avatar={avatar} _id={_id}  className='sugesstion__title__userbadge'/>
+        <User user={user} avatar={avatar} _id={_id}  className='sugesstion__title__userbadge'/>
 
         <div className='sugesstion__usernames'>
             <div className='sugesstion__username'>

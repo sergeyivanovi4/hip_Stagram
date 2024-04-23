@@ -18,7 +18,7 @@ function UserBio({
     <div className="userbio">
         <div>
             {avatar ? (
-                    <img scr={`http://hipstagram.node.ed.asmer.org.ua/${avatar}`} alt='img' akt="logo" className="userbio__avatar" />
+                    <img src={`http://hipstagram.node.ed.asmer.org.ua/${avatar}`}  alt="logo" className="userbio__avatar" />
             ) : (
                     <Avatar className="userbio__avatar" >{login?.[0].toUpperCase()}</Avatar>
             )}
@@ -30,8 +30,8 @@ function UserBio({
             </div>
             <div className='userbio__main'>
                 <UserCounter count={5} text="Дописів" className='userbio__counter'/>
-                <UserCounter count={followers.length} text="Читачів" className='userbio__counter'/>
-                <UserCounter count={following.length} text="Стежить" className='userbio__counter'/>
+                <UserCounter count={followers?.length || 0} text="Читачів" className='userbio__counter'/>
+                <UserCounter count={following?.length || 0} text="Стежить" className='userbio__counter'/>
             </div>
         </div>
     </div>
