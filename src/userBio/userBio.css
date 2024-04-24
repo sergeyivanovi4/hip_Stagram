@@ -13,8 +13,16 @@
 }
 .userbio__nick{
     font-weight: 600;
-    font-size: 20px;
+    font-size: 26px;
     margin-right: 10px;
+}
+.userbio__name {
+    font-weight: 500;
+    font-size: 20px;
+}
+
+.userbio__date{
+    font-size: 18px;
 }
 
 .userbio__info {
@@ -25,6 +33,10 @@
 .userbio__main {
     display: flex;
     align-items: center;
+    gap: 25px;
+    margin: 7px;
+    font-size: 22px;
+
 }
 .userbio__counter {
     margin-right: 50px;

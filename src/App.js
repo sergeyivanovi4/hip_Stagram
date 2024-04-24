@@ -15,9 +15,6 @@ import createHistory from "history/createBrowserHistory";
 import Homepage from "./Homepage";
 import Authenticate from "./authentication/Authenticate";
 import { useSelector } from "react-redux";
-import { setUserData } from "./app/_store";
-import { store } from "./app/_store";
-import { useLoginMutation } from "./app/_store";
 import { useDispatch } from 'react-redux';
 import { authSlice } from "./app/_store";
 
@@ -31,10 +28,6 @@ function App() {
   const dispatch = useDispatch()
 
   const user = useSelector(state => state.auth.token);
-
-
-  // const [{isLoading, data}] = useLoginMutation()
-
 
   useEffect(() => {
     const token = localStorage.getItem('token');

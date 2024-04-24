@@ -5,3 +5,11 @@
     padding-top: 20px;
     color: black;
 }
+
+.userpage__content {
+    display: flex;
+    flex-wrap: wrap;
+    padding-top: 100px;
+    padding-left: 10px;
+    gap: 10px;
+}

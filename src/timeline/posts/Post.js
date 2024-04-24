@@ -1,7 +1,5 @@
-// Post.js
 import React, { useState} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Avatar from '@mui/material/Avatar';
 import Checkbox from '@mui/material/Checkbox';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -9,12 +7,10 @@ import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import { addLikeToPost, removeLikeFromPost, updateLikesCountForPost, sendComment, useGetFindOneQuery } from "../../app/_store";
+import { addLikeToPost, removeLikeFromPost, sendComment, useGetFindOneQuery } from "../../app/_store";
 import './Post.css';
-import Likes from "./Likes"
 import Comment from './Comment';
 import User from '../../user/user';
-import { useHistory } from 'react-router-dom';
 
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -28,15 +24,15 @@ function Post({
     const auth = useSelector(state => state.auth); 
     const [isCommentsShown, setIsCommentsShown] = useState(false);
     const [comment, setComment] = useState("")
-    const history = useHistory();
 
 
 
 
-    console.log("_idPostPostPostPost", _id);
-    console.log("!authauthauthauthauthauthauthauth!", auth);
+
+    // console.log("_idPostPostPostPost", _id);
+    // console.log("!authauthauthauthauthauthauthauth!", auth);
 // console.log("comments", comments);
-console.log("postImage", postImage);
+// console.log("postImage", postImage);
 // console.log("likes", likes);
 // console.log("likesCountProp", likesCountProp);
 
@@ -44,7 +40,7 @@ console.log("postImage", postImage);
         if (comments && comments.length > 2 && !isCommentsShown) {
             const commentCopy = [...comments];
             const commentForRender = commentCopy.splice(comments.length - 2, 2);
-            console.log("commentCopy", commentCopy);
+            // console.log("commentCopy", commentCopy);
     
             return (
                 <>
@@ -70,21 +66,21 @@ console.log("postImage", postImage);
         const { id } = auth.payload.sub;
         const Liked = likes.find((like) => like.owner._id === id);
 
-        console.log("alreadyLiked  id ", Liked);
+        // console.log("alreadyLiked  id ", Liked);
         
        
-        const handleLikeToggle = () => {
+         const handleLikeToggle = () => {
 
             if (auth?.payload) {
 
                 if (!Liked) {
                     dispatch(addLikeToPost( _id ));
-                    console.log("працює   dispatch(addLikeToPost(_id));");
+                    // console.log("працює   dispatch(addLikeToPost(_id));");
                 } else {
                     const { _id } = Liked
-                    console.log("LikedId  id ", _id);
+                    // console.log("LikedId  id ", _id);
                     dispatch(removeLikeFromPost(_id));
-                    console.log("працює    dispatch(removeLikeFromPost(_id, alreadyLiked._id));");
+                    // console.log("працює    dispatch(removeLikeFromPost(_id, alreadyLiked._id));");
                 }
                 
             }
@@ -106,22 +102,13 @@ console.log("postImage", postImage);
         console.log("!!responsePageuseruser", response)
       
         const userId = response?.UserFindOne
-        console.log("UserPageuseruser", userId)
-
-        // const navigateToUserPage = (userId) => {
-        //     history.push(`/${userId}`);
-        // };
-
-        // const handleUserClick = () => {
-        //         navigateToUserPage(owner?._id);
-        //     };
+        // console.log("UserPageuseruser", userId)
 
 
     return (
         <div className='post'>
             <div className='post__header'>
                 <div className='post__headerAuthor' >               {/* onClick={handleUserClick} */}
-                    {/* <UserBadge user={user} _id={_id}/> */}
                     <User 
                         key={userId?._id} 
                         _id={userId?._id} 
@@ -189,3 +176,4 @@ console.log("postImage", postImage);
 
 
 export default Post;
+

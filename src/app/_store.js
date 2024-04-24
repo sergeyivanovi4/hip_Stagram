@@ -142,9 +142,32 @@ const api = createApi({
 									}
 								}
 		} `,
-        variables: { query: JSON.stringify([{ _id }]) },
+        variables: { query: JSON.stringify([{ _id }, {sort: [{_id: 1}]}]) },
       }),
       providesTags: (result, error, _id) => [{ type: "Post", _id: _id }],
+    }),
+
+    getPostFinds: builder.query({
+      query: (_id) => ({
+        document: `    
+        query GetPostFinds($query: String!){
+          PostFind(query:$query){     
+                    images { _id url }
+                    text
+                    comments { _id text post{_id}}
+                    owner{_id login avatar{url}}
+                    _id likesCount 
+                    likes{
+                        _id
+                        owner{				
+                            login avatar {url} _id
+                          }
+                    }
+              }
+            } `,
+        variables: { query: JSON.stringify([{ ___owner: _id } , {sort: [{_id: -1}]}])  },
+      }),
+      providesTags: (result, error, _id) => [{ type: "Post", _id}],
     }),
 
     createHipstagramPost: builder.mutation({
@@ -453,6 +476,7 @@ export const addLikeToPost = (_id) => async (dispatch) => {
   try {
     // Відправляємо запит на додавання лайка до поста
     const data = await dispatch(api.endpoints.createLikes.initiate(_id));
+    console.log("лайкаєєєєєєєєєєєєєє", data);
   } catch (error) {
     console.error("Помилка при додаванні лайка до поста:", error);
   }
@@ -462,6 +486,8 @@ export const removeLikeFromPost = (_id) => async (dispatch) => {
   try {
     // Відправляємо запит на видалення лайка з поста
     const data = await dispatch(api.endpoints.likeDelete.initiate(_id));
+    console.log("забираєєєєє лайкаєєєєєєєєєєєєєє", data);
+
   } catch (error) {
     console.error("Помилка при видаленні лайка з поста:", error);
   }
@@ -490,6 +516,8 @@ export const {
   useGetImageQuery,
   useGetUserByIdQuery,
   useGetPostOneQuery,
+  useGetPostFindsQuery,
+
 
   useCreateFindOneMutation,
   useCreateLikesMutation,
