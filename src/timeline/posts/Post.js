@@ -16,7 +16,7 @@ import User from '../../user/user';
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function Post({
-    owner, _id, likes, text, postImage, comments, user, likesCountProp, 
+    owner, _id, likes, text, postImage, comments, user, likesCountProp, nick, login, name
 
 }) 
 {
@@ -47,14 +47,24 @@ function Post({
                     <span className='post__comment__title' onClick={() => setIsCommentsShown(true)}>
                         {`Переглянути щє ${comments.length - commentForRender.length} коментаря: `}
                     </span>
-                    {commentForRender.map((comment) => <Comment key={comment._id} _id={comment._id} text={comment.text} />)}
+                    {commentForRender.map((comment) => 
+                            <Comment key={comment._id} 
+                                    _id={comment._id} 
+                                    name={comment.owner?.nick ? comment.owner.nick : comment.owner?.login} 
+                                    text={comment.text} 
+                            />)}
                 </>
             );
         }
     
         return (
             <>
-                {comments && comments.map((comment) => <Comment key={comment._id} _id={comment._id} text={comment.text} />)}
+                {comments && comments.map((comment) => 
+                            <Comment key={comment._id} 
+                            _id={comment._id} 
+                            text={comment.text} 
+                            name={comment.owner?.nick ? comment.owner.nick : comment.owner?.login} 
+                            />)}
     
                 {isCommentsShown ? (
                     <span className='post__comment__title' onClick={() => setIsCommentsShown(false)}>Сховати коментарі</span>

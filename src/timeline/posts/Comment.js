@@ -3,11 +3,12 @@ import "./Comment.css";
 
 function Comment({
     _id,
-    text
+    text,
+    name
 }) {
   return (
     <div className='comment'>
-        <span className='comment__name'>{_id}: </span>
+        <span className='comment__name'>{name}: </span>
         <span className='comment__text'>{text}</span>
     </div>
   )

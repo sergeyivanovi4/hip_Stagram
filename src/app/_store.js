@@ -112,7 +112,7 @@ const api = createApi({
 										}}
 									likesCount
 									owner {
-										_id login
+										_id login nick
 									}
 								}
 		} `,
@@ -129,7 +129,9 @@ const api = createApi({
 									createdAt
 									text
 									images { _id url }
-									comments { _id text post{_id}}
+									comments { _id text post{_id} owner {
+										_id login nick
+									}}
 									directs { _id }
 									collections { _id }
 									likes { _id 
@@ -138,7 +140,7 @@ const api = createApi({
 											}}
 									likesCount
 									owner {
-										_id login
+										_id login nick
 									}
 								}
 		} `,
@@ -155,7 +157,7 @@ const api = createApi({
                     images { _id url }
                     text
                     comments { _id text post{_id}}
-                    owner{_id login avatar{url}}
+                    owner{_id login avatar{url} nick}
                     _id likesCount 
                     likes{
                         _id
@@ -247,6 +249,7 @@ const api = createApi({
                         post {
                           _id
                         }
+                        owner { _id login nick}
                       }
                     } 
                     `,

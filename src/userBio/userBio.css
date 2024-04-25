@@ -5,11 +5,17 @@
     color: black;
 }
 
-.userbio__avatar {
+.userbio__avatar, .userbio__avatar__Avatar {
     height: 150px;
     width: 150px;
     border-radius: 50%;
     margin-right: 35px;
+}
+
+.userbio__avatar__Avatar {
+    width: 150px !important;
+    height: 150px !important;
+    font-size: 2rem !important;
 }
 .userbio__nick{
     font-weight: 600;
@@ -40,4 +46,21 @@
 }
 .userbio__counter {
     margin-right: 50px;
+}
+
+.userbio__btn {
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 10px;
+    padding: 10px;
+    cursor: pointer;
+    background-color: #91e7ff;
+
+    &:hover {
+        background-color: #61dafb;
+    }
+    &:active {
+        background-color: #91e7ff;
+    }
 }

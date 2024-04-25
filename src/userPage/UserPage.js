@@ -3,33 +3,49 @@ import UserBio from "../userBio/userBio";
 import "./UserPage.css";
 import { useGetFindOneQuery, useGetPostFindsQuery } from "../app/_store";
 import UserCardPhotos from "../userCardPhoto/UserCardPhotos";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { useSelector } from "react-redux";
 
 
 
 
 function UserPage({ _id}) {
   // console.log("UserPage_id_id_id_id_id_id", _id)
-  const { data: response, error, isLoading } = useGetFindOneQuery(_id); // ?
-  const { data: postData } = useGetPostFindsQuery(_id);
-
+	const { data: response, error, isLoading } = useGetFindOneQuery(_id); // ?
+	const { data: postData } = useGetPostFindsQuery(_id);
+	
+	const userAuth = useSelector(state => state.auth?.userInfo._id);
+	
+// console.log("!!responsePageuseruser", response)
+// console.log("!!data", postData)
   
-console.log("!!responsePageuseruser", response)
-console.log("!!data", postData)
+  	const user = response?.UserFindOne;
+	const posts = postData?.PostFind
+
+  	// console.log("UserPageuseruser", user)
+ 	// console.log("userAuth", userAuth)
+
+  	const [ postCount, setPostCount ] = useState(0);
+ 	const [ postForRender, setPostForRender ] = useState([]);
+	const [ page, setPage] = useState(0);
 
 
-
-  
-  const user = response?.UserFindOne;
-  console.log("UserPageuseruser", user)
- 
-
-  const [postCount, setPostCount] = useState(0);
- 
   useEffect(() => {
+	// const newPost = [...postData?.PostFind]
     if (postData && postData.PostFind) {
-      setPostCount(postData.PostFind.length);
+      setPostCount(posts.length);
+	  setPostForRender([...postData?.PostFind].slice(0, 12))
     }
   }, [postData]);
+
+
+  const loadMoreItems = () => {
+		const newPost = [...posts];
+		const offset = 12 * (page + 1);
+
+		setPostForRender([...postForRender, ...newPost.slice(offset, offset + 12)]);
+		setPage(page + 1);
+  }
 
   return (
     <div className="userpage">
@@ -43,11 +59,23 @@ console.log("!!data", postData)
 			following={user?.following}
 			createdAt={user?.createdAt}
 			postCount={postCount}
+			isMyPage={userAuth === user?._id }
+			isFollowers={user?.followers.includes(userAuth)}
 		/>
 
 		<div className="userpage__content">
-
-			 {postData?.PostFind?.map((post) => (
+			
+		{isLoading ? (<p className="userpage__loading">Завантаження...</p>) :
+			<InfiniteScroll
+				dataLength={postForRender.length}
+				next={loadMoreItems}
+				hasMore={postData?.PostFind?.length > postForRender.length} // Перевірка, чи є ще елементи для завантаження
+				loader={<p className="userpage__loading">Завантаження...</p>}
+				endMessage={<p className="userpage__loading__end">ВСЕ! Кінец.</p>}
+				className="userpage__scrool"
+				
+			>
+					{postForRender?.map((post) => (
                                 <UserCardPhotos 
                                     key={post?._id} // Додаєм ключ для кожного поста
                                     _id={post?._id}
@@ -67,10 +95,8 @@ console.log("!!data", postData)
                                 />
                             )
                     )}
-
-
+			</InfiniteScroll> }
 		</div>
-
     </div>
   );
 }

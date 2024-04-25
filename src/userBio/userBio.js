@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import "./userBio.css";
 import Avatar from "@mui/material/Avatar";
 import UserCounter from '../userCounter/UserCounter';
@@ -13,30 +13,44 @@ function UserBio({
     following,
     createdAt,
     postCount,
+    isMyPage,
+    isFollowers,
 } 
 ) {
+    console.log("!!!", isMyPage , isFollowers)
+    const [ btnProps, setBtnProps] = useState({ onClick: () => false, children: "Підписатись" })
 
-    // const {data} = useGetPostFindsQuery(_id);
-    // const {postCount} = data?.PostFind?._id;
+    useEffect(() => {
+        if (isMyPage) {
+            setBtnProps({ onClick: () => false, children: "Редагувати" })
+        } else if (isFollowers) {
+            setBtnProps({ onClick: () => false, children: "Відписатись" })
+        } else {
+            setBtnProps({ onClick: () => false, children: "Підписатись" })
+        }
+    }, [isMyPage, isFollowers])
+
+
 
     const date = new Date(parseInt(createdAt));
     const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}року`;
 
-    console.log("datedatedateavataravataravataravatar", createdAt)
-    console.log("avataravataravataravatar", avatar)
+    // console.log("datedatedateavataravataravataravatar", createdAt)
+    // console.log("avataravataravataravatar", avatar)
   return (
     <div className="userbio">
         <div>
             {avatar ? (
                     <img src={`http://hipstagram.node.ed.asmer.org.ua/${avatar}`}  alt="logo" className="userbio__avatar" />
             ) : (
-                    <Avatar className="userbio__avatar" >{login?.[0].toUpperCase()}</Avatar>
+                    <Avatar className="userbio__avatar__Avatar" >{login?.[0].toUpperCase()}</Avatar>
             )}
         </div>
 
         <div className='userbio__info'>
             <div className='userbio__main'>
-                <span className='userbio__nick'>{nick}</span>
+                <span className='userbio__nick'>{nick || "Анонім"}</span>
+                <button {...btnProps} className='userbio__btn'/>
             </div>
             <div className='userbio__main'>
                 <UserCounter count={postCount} text="Дописів" className='userbio__counter'/>
