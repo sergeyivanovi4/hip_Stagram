@@ -11,26 +11,29 @@ import { addLikeToPost, removeLikeFromPost, sendComment, useGetFindOneQuery } fr
 import './Post.css';
 import Comment from './Comment';
 import User from '../../user/user';
+import PhotoModal from '../../photoModal/PhotoModal';
 
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function Post({
-    owner, _id, likes, text, postImage, comments, user, likesCountProp, nick, login, name
+    owner, _id, likes, text, postImage, comments, user, likesCountProp, nick, login, name, createdAt, avatar
 
 }) 
 {
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth); 
-    const [isCommentsShown, setIsCommentsShown] = useState(false);
-    const [comment, setComment] = useState("")
+    const [ isCommentsShown, setIsCommentsShown ] = useState(false);
+    const [ comment, setComment ] = useState("")
+    const [ isModalVisible, setIsModalVisibal ] = useState(false);
+
+    const date = new Date(parseInt(createdAt));
+    const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}р.`;
 
 
 
-
-
-    // console.log("_idPostPostPostPost", _id);
-    // console.log("!authauthauthauthauthauthauthauth!", auth);
+// console.log("_idPostPostPostPost", _id);
+// console.log("!authauthauthauthauthauthauthauth!", auth);
 // console.log("comments", comments);
 // console.log("postImage", postImage);
 // console.log("likes", likes);
@@ -60,10 +63,11 @@ function Post({
         return (
             <>
                 {comments && comments.map((comment) => 
-                            <Comment key={comment._id} 
-                            _id={comment._id} 
-                            text={comment.text} 
-                            name={comment.owner?.nick ? comment.owner.nick : comment.owner?.login} 
+                            <Comment 
+                                key={comment._id} 
+                                _id={comment._id} 
+                                text={comment.text} 
+                                name={comment.owner?.nick ? comment.owner.nick : comment.owner?.login} 
                             />)}
     
                 {isCommentsShown ? (
@@ -109,7 +113,7 @@ function Post({
         
         const { data: response, error, isLoading } = useGetFindOneQuery(owner?._id) // ?
 
-        console.log("!!responsePageuseruser", response)
+        // console.log("!!responsePageuseruser", response)
       
         const userId = response?.UserFindOne
         // console.log("UserPageuseruser", userId)
@@ -127,8 +131,9 @@ function Post({
                         nick={userId?.nick}
                         followers={userId?.followers}
                         following={userId?.following}
-                    
+                        createdAt={createdAt}
                     />
+                    <div className='post__date'>{formattedDate}</div>
                 </div>
             </div>
             <div className='post__image'>
@@ -145,7 +150,13 @@ function Post({
                             checked={Liked || false}
                             onChange={handleLikeToggle}
                         />
-                        <Checkbox {...label} icon={<ChatBubbleOutlineIcon />} checkedIcon={<ChatBubbleOutlineIcon />} className='postIcon' />
+                        <Checkbox 
+                            {...label} 
+                            icon={<ChatBubbleOutlineIcon />} 
+                            checkedIcon={<ChatBubbleOutlineIcon />} 
+                            className='postIcon' 
+                            onChange={() => setIsModalVisibal(true)}
+                            />
                         <Checkbox {...label} icon={<TelegramIcon />} checkedIcon={<TelegramIcon />} className='postIcon' />
                     </div>
                     <div className='post__footerSave'>
@@ -179,6 +190,14 @@ function Post({
                         Опублікувати
                     </button>
                 </div>
+                <PhotoModal 
+                    isOpen={isModalVisible}
+                    onClose={() => setIsModalVisibal(false)}
+                    nick={owner?.nick}
+                    login={owner?.login}
+                    comments={comments}
+                    avatar={avatar}
+                />
             </div>
         </div>
     );

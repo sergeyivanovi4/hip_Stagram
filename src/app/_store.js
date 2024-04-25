@@ -140,7 +140,7 @@ const api = createApi({
 											}}
 									likesCount
 									owner {
-										_id login nick
+										_id login nick avatar { url }
 									}
 								}
 		} `,

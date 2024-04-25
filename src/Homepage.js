@@ -80,7 +80,7 @@ const Aside = () => {
 					key={user?._id} 
 					_id={user?._id} 
 					login={user?.login}
-					avatar={user?.avatar.url}
+					avatar={user?.avatar?.url}
 					nick={user?.nick}
 					followers={user?.followers}
           			following={user?.following}

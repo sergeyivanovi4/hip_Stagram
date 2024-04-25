@@ -26,7 +26,7 @@ function PageMain() {
                 <InfiniteScroll
                      dataLength={itemsToShow}
                      next={loadMoreItems}
-                     hasMore={response.PostFind.length > itemsToShow} // Перевірка, чи є ще елементи для завантаження
+                     hasMore={response.PostFind?.length > itemsToShow} // Перевірка, чи є ще елементи для завантаження
                      loader={<p className="pagemain__loading">Завантаження...</p>}
                      endMessage={<p className="pagemain__loading">ВСЕ! Кінец.</p>} // Повідомлення, яке відображається після завантаження всіх елементів
                 >
@@ -34,6 +34,7 @@ function PageMain() {
                                 <Post
                                     key={post._id} // Додаєм ключ для кожного поста
                                     _id={post._id}
+                                    createdAt={post.createdAt}
                                     user={post.owner.login}
                                     postImage={post.images && post.images[0] && post.images[0].url}
                                     likesCountProp={post?.likesCount}
@@ -41,6 +42,7 @@ function PageMain() {
                                     text={post.text}
                                     comments={post.comments}
                                     owner={post.owner}
+                                    avatar={post?.owner?.avatar}
                                     isLoading={isLoading}
                                 />
                             )

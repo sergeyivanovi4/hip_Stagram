@@ -9,6 +9,7 @@ function User({
 	avatar, 
 	_id, 
 	login,
+  createdAt,
 	owner, 
 	user, 
 	children 
@@ -25,7 +26,7 @@ function User({
     };
 
   return (
-    <div>
+    <div className="user">
       <div className="user__root" onClick={handleUserClick}>
         {avatar ? (
           	<img src={`http://hipstagram.node.ed.asmer.org.ua/${avatar}`} alt="logo" className="user__avatar" />

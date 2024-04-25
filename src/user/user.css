@@ -1,7 +1,14 @@
+.user {
+    display: flex;
+    align-items: center;
+    justify-content: space-between !important;
+    /* gap: 50px; */
+    /* width: 100%; */
+}
 .user__root {
     display: flex;
     align-items: center;
-    /* justify-content: center; */
+    /* justify-content: space-between; */
     cursor: pointer;
 
     &:hover div {

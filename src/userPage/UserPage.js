@@ -14,7 +14,7 @@ function UserPage({ _id}) {
 	const { data: response, error, isLoading } = useGetFindOneQuery(_id); // ?
 	const { data: postData } = useGetPostFindsQuery(_id);
 	
-	const userAuth = useSelector(state => state.auth?.userInfo._id);
+	const userAuth = useSelector(state => state.auth?.userInfo?._id);
 	
 // console.log("!!responsePageuseruser", response)
 // console.log("!!data", postData)
@@ -22,8 +22,8 @@ function UserPage({ _id}) {
   	const user = response?.UserFindOne;
 	const posts = postData?.PostFind
 
-  	// console.log("UserPageuseruser", user)
- 	// console.log("userAuth", userAuth)
+  	console.log("UserPageuseruser", user)
+ 	console.log("userAuth", userAuth)
 
   	const [ postCount, setPostCount ] = useState(0);
  	const [ postForRender, setPostForRender ] = useState([]);
@@ -60,7 +60,7 @@ function UserPage({ _id}) {
 			createdAt={user?.createdAt}
 			postCount={postCount}
 			isMyPage={userAuth === user?._id }
-			isFollowers={user?.followers.includes(userAuth)}
+			isFollowers={user?.followers?.includes(userAuth)}
 		/>
 
 		<div className="userpage__content">
