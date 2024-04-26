@@ -9,9 +9,8 @@
   }
   
   ::-webkit-scrollbar-track {
-    background: #004f64;; /* Колір фону скрола */
+    background: #00303d;; /* Колір фону скрола */
   }
-  
 }
 
 body {

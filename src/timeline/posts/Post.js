@@ -12,6 +12,7 @@ import './Post.css';
 import Comment from './Comment';
 import User from '../../user/user';
 import PhotoModal from '../../photoModal/PhotoModal';
+import Textarea from '../../Textareas/Textarea';
 
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
@@ -31,6 +32,8 @@ function Post({
     const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}р.`;
 
 
+    console.log("comments", comments);
+
 
 // console.log("_idPostPostPostPost", _id);
 // console.log("!authauthauthauthauthauthauthauth!", auth);
@@ -43,7 +46,6 @@ function Post({
         if (comments && comments.length > 2 && !isCommentsShown) {
             const commentCopy = [...comments];
             const commentForRender = commentCopy.splice(comments.length - 2, 2);
-            // console.log("commentCopy", commentCopy);
     
             return (
                 <>
@@ -76,6 +78,7 @@ function Post({
             </>
         );
     };
+
 
         const { id } = auth.payload.sub;
         const Liked = likes.find((like) => like.owner._id === id);
@@ -112,12 +115,19 @@ function Post({
         }
         
         const { data: response, error, isLoading } = useGetFindOneQuery(owner?._id) // ?
-
         // console.log("!!responsePageuseruser", response)
-      
         const userId = response?.UserFindOne
         // console.log("UserPageuseruser", userId)
 
+
+    const onCloseModal = () => {
+        setComment("")
+        setIsModalVisibal(false)
+    }
+    const onOpenModal = () => {
+        setComment("")
+        setIsModalVisibal(true)
+    }
 
     return (
         <div className='post'>
@@ -155,7 +165,7 @@ function Post({
                             icon={<ChatBubbleOutlineIcon />} 
                             checkedIcon={<ChatBubbleOutlineIcon />} 
                             className='postIcon' 
-                            onChange={() => setIsModalVisibal(true)}
+                            onChange={onOpenModal}
                             />
                         <Checkbox {...label} icon={<TelegramIcon />} checkedIcon={<TelegramIcon />} className='postIcon' />
                     </div>
@@ -174,29 +184,30 @@ function Post({
                 <div className='post__comment'>
                     {renderComments()}
                 </div>
-
-                <div className='post__textarea__wrapper'> 
-                    <textarea 
-                        className='post__textarea' 
+                <Textarea
                         placeholder='Додайте коментар'
                         value={comment} 
-                        onChange={e => setComment(e.target.value)}
+                        onChange={setComment}
+                        isLoading={isLoading}
+                        onSubmit={onCommentSendClick}
+                        buttonText="Опублікувати"
                     />
-                    <button 
-                        disabled={isLoading}
-                        className='post__textarea__btn'
-                        onClick={() => onCommentSendClick(comment)}
-                    >
-                        Опублікувати
-                    </button>
-                </div>
+
                 <PhotoModal 
                     isOpen={isModalVisible}
-                    onClose={() => setIsModalVisibal(false)}
+                    onClose={onCloseModal}
                     nick={owner?.nick}
                     login={owner?.login}
                     comments={comments}
                     avatar={avatar}
+                    commentValue={comment}
+                    setCommentValue={setComment}
+                    handleLikeToggle={handleLikeToggle}
+                    onCommentSendClick={onCommentSendClick}
+                    isLoading={isLoading}
+                    postImage={postImage}
+                    Liked={Liked}
+                    likes={likes}
                 />
             </div>
         </div>

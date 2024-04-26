@@ -1,0 +1,30 @@
+.textarea__wrapper{
+    position: relative;
+    display: flex;
+}
+.textarea {
+    box-sizing: border-box;
+    border-color: #61dafb;
+    border-radius: 5px 0 0 5px;
+    width: 90%;
+    padding: 5px;
+    outline: none;
+    resize: none;
+}
+
+.textarea__btn {
+    bottom: 5px;
+    right: 10px;
+    border: 2px solid #91e7ff;
+    border-radius: 0 5px 5px 0;
+    padding: 5px;
+    cursor: pointer;
+    /* background-color: #91e7ff; */
+
+    &:hover {
+        background-color: #61dafb;
+    }
+    &:active {
+        background-color: #91e7ff;
+    }
+}

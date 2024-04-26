@@ -82,9 +82,10 @@ function UserPage({ _id}) {
 									images={post?.images}
 									likes={post?.likes}
 									likesId={post?.likes?._id}
-									avatar={post?.owner.avatar?.url}
-									id={post?.owner._id}
-									login={post?.owner.login}
+									avatar={post?.owner?.avatar?.url}
+									id={post?.owner?._id}
+									login={post?.owner?.login}
+									nick={post?.owner?.nick}
 									postImage={post?.images && post?.images[0] && post?.images[0].url}
 									postImageId={post?.images?._id}
                                     // text={post?.text || ""}

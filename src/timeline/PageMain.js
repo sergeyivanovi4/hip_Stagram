@@ -42,7 +42,7 @@ function PageMain() {
                                     text={post.text}
                                     comments={post.comments}
                                     owner={post.owner}
-                                    avatar={post?.owner?.avatar}
+                                    avatar={post?.owner?.avatar?.url}
                                     isLoading={isLoading}
                                 />
                             )

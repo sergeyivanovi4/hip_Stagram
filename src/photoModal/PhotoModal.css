@@ -72,11 +72,26 @@
 }
 
 .modal__main__comment {
-    max-height: 55vh;
+    max-height: 53vh;
     padding: 10px;
     color: black !important;
     overflow-y: auto;
 }
+
+.modal__main__logo__avatar, .modal__main__logo__Avatar {
+    height: 40px;
+    width: 40px;
+    border-radius: 50%;
+    margin-left: 10px;
+}
+
+.modal__icons__icon, .modal__main__likes{
+    margin:  auto;
+    padding: 5px;
+}
+
+
+
 .modal__main__comment::-webkit-scrollbar {
     width: 10px; /* Ширина скрола */
   }

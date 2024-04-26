@@ -129,7 +129,7 @@ const api = createApi({
 									createdAt
 									text
 									images { _id url }
-									comments { _id text post{_id} owner {
+									comments { _id text owner {
 										_id login nick
 									}}
 									directs { _id }
@@ -154,18 +154,24 @@ const api = createApi({
         document: `    
         query GetPostFinds($query: String!){
           PostFind(query:$query){     
-                    images { _id url }
-                    text
-                    comments { _id text post{_id}}
-                    owner{_id login avatar{url} nick}
-                    _id likesCount 
-                    likes{
-                        _id
-                        owner{				
-                            login avatar {url} _id
-                          }
-                    }
-              }
+                        _id 
+                        createdAt
+                        text
+                        images { _id url }
+                        comments { _id text owner {
+                          _id login nick
+                        }}
+                        directs { _id }
+                        collections { _id }
+                        likes { _id 
+                            owner {
+                              _id login
+                            }}
+                        likesCount
+                        owner {
+                          _id login nick avatar { url }
+                        }
+                      }
             } `,
         variables: { query: JSON.stringify([{ ___owner: _id } , {sort: [{_id: -1}]}])  },
       }),

@@ -6,6 +6,9 @@ function Comment({
     text,
     name
 }) {
+
+  console.log("name", name);
+
   return (
     <div className='comment'>
         <span className='comment__name'>{name}: </span>
