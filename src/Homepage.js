@@ -32,7 +32,7 @@ const Aside = () => {
 	};
 
 	const user = useSelector(state => state.auth?.userInfo);
-	console.log("user!!!!!!!!", user)
+	console.log("user!!", user)
 
 	if (isLoading) {
 		return (
@@ -132,8 +132,8 @@ const PageAbout = () =>
 </>
 
 
-const Page404 = () =>
-	<h1>Щось пішло не так</h1>
+const Page404 = () => <h1>Щось пішло не так</h1>
+	
 
 
 function Homepage() {

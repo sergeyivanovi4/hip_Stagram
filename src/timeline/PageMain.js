@@ -28,7 +28,7 @@ function PageMain() {
                      next={loadMoreItems}
                      hasMore={response.PostFind?.length > itemsToShow} // Перевірка, чи є ще елементи для завантаження
                      loader={<p className="pagemain__loading">Завантаження...</p>}
-                     endMessage={<p className="pagemain__loading">ВСЕ! Кінец.</p>} // Повідомлення, яке відображається після завантаження всіх елементів
+                     endMessage={<p className="pagemain__loading">Постів не має</p>} // Повідомлення, яке відображається після завантаження всіх елементів
                 >
                     {response?.PostFind?.slice(0, itemsToShow).map((post) => (
                                 <Post

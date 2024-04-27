@@ -8,12 +8,13 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import { addLikeToPost, removeLikeFromPost, sendComment, useGetFindOneQuery } from "../../app/_store";
-import './Post.css';
 import Comment from './Comment';
 import User from '../../user/user';
 import PhotoModal from '../../photoModal/PhotoModal';
 import Textarea from '../../Textareas/Textarea';
+import ImageWithLoader from '../../imageWithLoader/ImageWithLoader';
 
+import './Post.css';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -30,11 +31,9 @@ function Post({
 
     const date = new Date(parseInt(createdAt));
     const formattedDate = `${date.getDate()}.${date.getMonth() + 1}.${date.getFullYear()}р.`;
+  
 
-
-    console.log("comments", comments);
-
-
+// console.log("comments", comments);
 // console.log("_idPostPostPostPost", _id);
 // console.log("!authauthauthauthauthauthauthauth!", auth);
 // console.log("comments", comments);
@@ -83,11 +82,9 @@ function Post({
         const { id } = auth.payload.sub;
         const Liked = likes.find((like) => like.owner._id === id);
 
-        // console.log("alreadyLiked  id ", Liked);
-        
+// console.log("alreadyLiked  id ", Liked);
        
-         const handleLikeToggle = () => {
-
+        const handleLikeToggle = () => {
             if (auth?.payload) {
 
                 if (!Liked) {
@@ -98,8 +95,7 @@ function Post({
                     // console.log("LikedId  id ", _id);
                     dispatch(removeLikeFromPost(_id));
                     // console.log("працює    dispatch(removeLikeFromPost(_id, alreadyLiked._id));");
-                }
-                
+                }               
             }
         };
         
@@ -113,7 +109,7 @@ function Post({
                 alert("Пустий коментар")
             }
         }
-        
+
         const { data: response, error, isLoading } = useGetFindOneQuery(owner?._id) // ?
         // console.log("!!responsePageuseruser", response)
         const userId = response?.UserFindOne
@@ -146,9 +142,13 @@ function Post({
                     <div className='post__date'>{formattedDate}</div>
                 </div>
             </div>
-            <div className='post__image'>
-                <img src={`http://hipstagram.node.ed.asmer.org.ua/${postImage}`} alt='img' className='post__image__img' />
-            </div>
+
+            <ImageWithLoader 
+                src={postImage} 
+                alt={'img' } 
+                className={'post__image'} 
+            />
+
             <div className='post__footer'>
                 <div className='post__footerIcons'>
                     <div className='post__footerMain'>

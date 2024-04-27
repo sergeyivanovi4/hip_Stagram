@@ -13,23 +13,23 @@
 }
 
 .userbio__avatar__Avatar {
-    width: 150px !important;
-    height: 150px !important;
+    width: 130px !important;
+    height: 130px !important;
     font-size: 2rem !important;
     background-color: #91e7ff !important;
 }
 .userbio__nick{
     font-weight: 600;
-    font-size: 26px;
+    font-size: 22px;
     margin-right: 10px;
 }
 .userbio__name {
     font-weight: 500;
-    font-size: 20px;
+    font-size: 16px;
 }
 
 .userbio__date{
-    font-size: 18px;
+    font-size: 14px;
 }
 
 .userbio__info {
@@ -42,7 +42,7 @@
     align-items: center;
     gap: 25px;
     margin: 7px;
-    font-size: 22px;
+    font-size: 18px;
 
 }
 .userbio__counter {
@@ -50,7 +50,7 @@
 }
 
 .userbio__btn {
-    font-size: 16px;
+    font-size: 14px;
     font-weight: 600;
     border: none;
     border-radius: 10px;

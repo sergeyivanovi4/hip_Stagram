@@ -39,8 +39,8 @@
     background: #61dafb;
     min-width: 30vw;
     height: 80vh;
-    border-top-left-radius: 15px;
-    border-bottom-left-radius: 15px; 
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px; 
 }
 
 .modal__main__img {

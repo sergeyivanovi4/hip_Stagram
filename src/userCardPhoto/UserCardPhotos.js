@@ -9,6 +9,7 @@ import { handleLikeToggle } from '../timeline/posts/Post';
 import { sendComment, useGetPostOneQuery } from '../app/_store';
 import { addLikeToPost, removeLikeFromPost } from "../app/_store";
 import PhotoModal from '../photoModal/PhotoModal';
+import ImageWithLoader from '../imageWithLoader/ImageWithLoader';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -46,13 +47,14 @@ const onCommentSendClick = () => {
   }
 }
 
-  const [isModalVisible, setIsModalVisibal] = useState(false);
-  const [comment, setComment] = useState("");
+  const [ isModalVisible, setIsModalVisibal ] = useState(false);
+  const [ comment, setComment ] = useState("");
+
 
   return (
     <div className='usercard'>
-        <img src={`http://hipstagram.node.ed.asmer.org.ua/${postImage}`} alt="image" className='card__img'/>
-        <div className='usercard__hover'/>
+		<ImageWithLoader src={postImage} alt={"image"} />
+    	<div className='usercard__hover'/>
         <div className='usercard__icons'>
             <Checkbox 
                         {...label} 

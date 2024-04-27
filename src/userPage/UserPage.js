@@ -12,8 +12,8 @@ import { useSelector } from "react-redux";
 function UserPage({ _id}) {
   // console.log("UserPage_id_id_id_id_id_id", _id)
 	const { data: response, error, isLoading } = useGetFindOneQuery(_id); // ?
-	const { data: postData } = useGetPostFindsQuery(_id);
-	
+	const { data: postData, errorPost } = useGetPostFindsQuery(_id);
+	console.log("errorPost", errorPost, error)
 	const userAuth = useSelector(state => state.auth?.userInfo?._id);
 	
 // console.log("!!responsePageuseruser", response)
@@ -22,8 +22,8 @@ function UserPage({ _id}) {
   	const user = response?.UserFindOne;
 	const posts = postData?.PostFind
 
-  	console.log("UserPageuseruser", user)
- 	console.log("userAuth", userAuth)
+// console.log("UserPageuseruser", user)
+// console.log("userAuth", userAuth)
 
   	const [ postCount, setPostCount ] = useState(0);
  	const [ postForRender, setPostForRender ] = useState([]);
@@ -50,28 +50,28 @@ function UserPage({ _id}) {
   return (
     <div className="userpage">
 
-		<UserBio
-			avatar={user?.avatar?.url}
-			_id={user?._id}
-			nick={user?.nick}
-			login={user?.login}
-			followers={user?.followers}
-			following={user?.following}
-			createdAt={user?.createdAt}
-			postCount={postCount}
-			isMyPage={userAuth === user?._id }
-			isFollowers={user?.followers?.includes(userAuth)}
-		/>
+			<UserBio
+				avatar={user?.avatar?.url}
+				_id={user?._id}
+				nick={user?.nick}
+				login={user?.login}
+				followers={user?.followers}
+				following={user?.following}
+				createdAt={user?.createdAt}
+				postCount={postCount}
+				isMyPage={userAuth === user?._id }
+				isFollowers={user?.followers?.includes(userAuth)}
+			/>
 
 		<div className="userpage__content">
 			
-		{isLoading ? (<p className="userpage__loading">Завантаження...</p>) :
+		{!errorPost && isLoading ? (<p className="userpage__loading">Завантаження...</p>) :
 			<InfiniteScroll
 				dataLength={postForRender.length}
 				next={loadMoreItems}
 				hasMore={postData?.PostFind?.length > postForRender.length} // Перевірка, чи є ще елементи для завантаження
 				loader={<p className="userpage__loading">Завантаження...</p>}
-				endMessage={<p className="userpage__loading__end">ВСЕ! Кінец.</p>}
+				endMessage={<p className="userpage__loading__end">Постів не має</p>}
 				className="userpage__scrool"
 				
 			>

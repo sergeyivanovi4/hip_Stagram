@@ -23,7 +23,7 @@ const api = createApi({
         //якщо ми залогінени
         headers.set("Authorization", "Bearer " + token); //додаємо токен до заголовків
       }
-      console.log("auth!!!!", getState().auth, token);
+      console.log("auth!", getState().auth, token);
       return headers;
     },
   }),
@@ -154,7 +154,7 @@ const api = createApi({
         document: `    
         query GetPostFinds($query: String!){
           PostFind(query:$query){     
-                        _id 
+                        _id
                         createdAt
                         text
                         images { _id url }

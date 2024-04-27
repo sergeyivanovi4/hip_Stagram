@@ -5,6 +5,7 @@ import Modal from "react-modal";
 import Comment from '../timeline/posts/Comment';
 import "./PhotoModal.css"
 import Textarea from '../Textareas/Textarea';
+import ImageWithLoader from '../imageWithLoader/ImageWithLoader';
 
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
@@ -41,6 +42,7 @@ function PhotoModal({
     >
         <div className='modal__main'>
             <div className='modal__main__image'>
+                {/* <ImageWithLoader src={postImage} className='modal__main__image' alt='img'/> */}
                 <img src={`http://hipstagram.node.ed.asmer.org.ua/${postImage}`} alt='img' className='modal__main__img'/>
             </div>
             <div className='modal__main__commentBlock'>
