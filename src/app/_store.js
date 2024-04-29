@@ -146,6 +146,8 @@ const api = createApi({
 								}
 		} `,
         variables: { query: JSON.stringify([{ _id }, {sort: [{_id: -1}], skip: [3960]}]) },
+        // variables: { query: JSON.stringify([{ _id }, {sort: [{_id: -1}]}]) },
+
       }),
       providesTags: (result, error, _id) => [{ type: "Post", _id: _id }],
     }),
@@ -296,6 +298,23 @@ const api = createApi({
         variables: { user: {_id: id, avatar: {_id: avatar}} },
       }),
       invalidatesTags: (result, error,  _id ) => [{ type: "User", _id}],
+    }),
+
+    createPost: builder.mutation({
+      query: ({_id}) => ({
+        document: `
+                  mutation setPost($post: PostInput!){
+                    PostUpsert(post: $post){
+                      _id 
+                      createdAt
+                      text
+                      images { _id }
+                    }
+                  }
+                  `,
+        variables: { post: {images: {_id: _id}} },
+      }),
+      invalidatesTags: (result, error,  _id ) => [{ type: "Post", _id}],
     }),
 
     createImage: builder.mutation({
@@ -500,6 +519,16 @@ export const actionCreateAvatar = (avatar) => async (dispatch, getState) => {
     console.log("avatar", avatar);
     const user = await dispatch(api.endpoints.createAvatar.initiate({ id, avatar}));
     console.log("actionCreateAvatar", user);
+  }
+};
+
+export const actionSavePost = (_id) => async (dispatch, getState) => {
+  const { auth } = getState();
+  if (auth.payload) {
+    // const { id } = auth.payload.sub;
+    // console.log("idactionSavePost", id);
+    const user = await dispatch(api.endpoints.createPost.initiate({_id}));
+    // console.log("actionSavePost", user);
   }
 };
 

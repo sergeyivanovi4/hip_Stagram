@@ -1,17 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import "./Sugesstions.css";
 import Avatar from '@mui/material/Avatar';
 import User from '../user/user';
+import { useGetFindOneQuery } from '../app/_store';
 
 
 function Sugesstions({
     nick,
     avatar,
     _id,
-    user,
+    // user,
     children
 }) {
 
+    const { data: response, error, isLoading } = useGetFindOneQuery(_id); // ?
+    const user = response?.UserFindOne;
+    const [ postForRender, setPostForRender ] = useState([]);
 
   return (
     <div className='sugesstion'>
