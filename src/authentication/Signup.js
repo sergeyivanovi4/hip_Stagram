@@ -34,7 +34,7 @@ function Signup() {
       
       const response = await fullRegisterMutation({ login: login, password: password });
       if (response.error) {
-        console.error("Помилка під час реєстрації:", response.error);
+        // console.error("Помилка під час реєстрації:", response.error);
         alert("Помилка під час реєстрації");
       } else {
         // Успішна реєстрація, встановлення стану автентифікації

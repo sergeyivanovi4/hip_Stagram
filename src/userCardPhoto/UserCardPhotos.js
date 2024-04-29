@@ -19,12 +19,12 @@ function UserCardPhotos({
 
     const dispatch = useDispatch();
     const auth = useSelector(state => state.auth);
-    console.log("nick1", nick)
+// console.log("nick1", nick)
     const { id } = auth.payload.sub;
-    // console.log("id", id)
+// console.log("id", id)
     const Liked = likes.find((like) => like.owner._id === id);
-    // console.log("LikedLikedLikedLiked", Liked)
-    // console.log("likeslikeslikeslikeslikeslikeslikes", likes)
+// console.log("LikedLikedLikedLiked", Liked)
+// console.log("likeslikeslikeslikeslikeslikeslikes", likes)
 
   const handleLikeToggle = () => {
     if (auth?.payload) {
@@ -53,13 +53,14 @@ const onCommentSendClick = () => {
 
   return (
     <div className='usercard'>
-		<ImageWithLoader src={postImage} alt={"image"} />
+		  <ImageWithLoader src={postImage} alt={"image"} className='useracrd__img'/>
+
     	<div className='usercard__hover'/>
         <div className='usercard__icons'>
             <Checkbox 
                         {...label} 
-                        icon={<FavoriteBorder />} 
-                        checkedIcon={<Favorite />} 
+                        icon={<FavoriteBorder style={{ color: 'white' }} />} 
+                        checkedIcon={<Favorite style={{ color: '#1aacd4' }} />} 
                         className='usercard__icon' 
                         checked={Liked || false}
                         onChange={handleLikeToggle}
@@ -68,8 +69,8 @@ const onCommentSendClick = () => {
 
             <Checkbox 
                         {...label} 
-                        icon={<ChatBubbleOutlineIcon />} 
-                        checkedIcon={<ChatBubbleOutlineIcon />} 
+                        icon={<ChatBubbleOutlineIcon style={{ color: 'white' }} />} 
+                        checkedIcon={<ChatBubbleOutlineIcon style={{ color: 'white' }} />} 
                         className='usercard__icon' 
                         onChange={() => setIsModalVisibal(true)}
             />

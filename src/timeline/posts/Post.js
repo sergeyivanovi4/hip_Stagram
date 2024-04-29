@@ -154,26 +154,26 @@ function Post({
                     <div className='post__footerMain'>
                         <Checkbox 
                             {...label} 
-                            icon={<FavoriteBorder />} 
-                            checkedIcon={<Favorite />} 
+                            icon={<FavoriteBorder style={{ color: '#1aacd4' }} />} 
+                            checkedIcon={<Favorite style={{ color: '#1aacd4' }} />} 
                             className='postIcon' 
                             checked={Liked || false}
                             onChange={handleLikeToggle}
                         />
                         <Checkbox 
                             {...label} 
-                            icon={<ChatBubbleOutlineIcon />} 
-                            checkedIcon={<ChatBubbleOutlineIcon />} 
+                            icon={<ChatBubbleOutlineIcon style={{ color: '#1aacd4' }} />} 
+                            checkedIcon={<ChatBubbleOutlineIcon style={{ color: '#1aacd4' }} />} 
                             className='postIcon' 
                             onChange={onOpenModal}
                             />
-                        <Checkbox {...label} icon={<TelegramIcon />} checkedIcon={<TelegramIcon />} className='postIcon' />
+                        <Checkbox {...label} icon={<TelegramIcon />} checkedIcon={<TelegramIcon />} className='postIcon' style={{ color: '#1aacd4' }} />
                     </div>
                     <div className='post__footerSave'>
                         <Checkbox
                             {...label}
                             icon={<BookmarkBorderIcon />}
-                            checkedIcon={<BookmarkIcon />}
+                            checkedIcon={<BookmarkIcon style={{ color: '#1aacd4' }} />}
                             className='postIcon'
                         />
                     </div>

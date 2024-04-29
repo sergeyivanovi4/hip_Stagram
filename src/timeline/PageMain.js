@@ -10,7 +10,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 function PageMain() {
 
     const { data: response, error, isLoading } = useGetPostOneQuery(); 
-    console.log("RRRResponsePageMainPageMain", response)
+    // console.log("RRRResponsePageMainPageMain", response)
     
 
         const [itemsToShow, setItemsToShow] = useState(5); 

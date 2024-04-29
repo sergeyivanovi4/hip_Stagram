@@ -11,6 +11,15 @@
     border-radius: 50%;
     margin-right: 35px;
 }
+/* .userbio__avatar {
+    object-fit: cover;
+} */
+.userbio__avatar__main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
 
 .userbio__avatar__Avatar {
     width: 130px !important;

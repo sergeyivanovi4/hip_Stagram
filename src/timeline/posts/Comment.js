@@ -7,7 +7,7 @@ function Comment({
     name
 }) {
 
-  console.log("name", name);
+  // console.log("name", name);
 
   return (
     <div className='comment'>

@@ -1,12 +1,12 @@
 import React from "react";
 import { useHistory } from "react-router-dom";
 import Avatar from "@mui/material/Avatar";
-import { useGetFindOneQuery } from "../app/_store"
+import { useGetFindOneQuery, useGetUserByIdQuery } from "../app/_store"
 import "./user.css";
 
 function User({ 
-	nick, 
-	avatar, 
+	// nick, 
+	// avatar, 
 	_id, 
 	login,
   createdAt,
@@ -14,6 +14,11 @@ function User({
 	user, 
 	children 
 }) {
+  // const [ updateNick, {isFetching, data}] = useSetUserNickMutation();
+  const { isFetching: isFetchingFromBack, data: dataFromBack } = useGetUserByIdQuery(_id);
+  const nick = dataFromBack?.UserFindOne?.nick
+  const avatar = dataFromBack?.UserFindOne?.avatar?.url
+  	// console.log("dataFromBack!", dataFromBack)
 
 	const history = useHistory();
 
@@ -31,7 +36,7 @@ function User({
         {avatar ? (
           	<img src={`http://hipstagram.node.ed.asmer.org.ua/${avatar}`} alt="logo" className="user__avatar" />
 		) : (
-				<Avatar className="user__Avatar" >{login?.[0].toUpperCase()}</Avatar>
+				<Avatar className="user__Avatar" >{nick ? nick[0].toUpperCase() : login?.[0].toUpperCase()}</Avatar>
 		)}
         <span className="user__name">{nick || login}</span>
       </div>

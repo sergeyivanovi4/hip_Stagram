@@ -41,10 +41,10 @@ function PhotoModal({
         overlayClassName="modal__overlay"
     >
         <div className='modal__main'>
-            <div className='modal__main__image'>
-                {/* <ImageWithLoader src={postImage} className='modal__main__image' alt='img'/> */}
-                <img src={`http://hipstagram.node.ed.asmer.org.ua/${postImage}`} alt='img' className='modal__main__img'/>
-            </div>
+
+            <ImageWithLoader src={postImage} className='modal__main__image' alt='img'/>
+            {/* <img src={`http://hipstagram.node.ed.asmer.org.ua/${postImage}`} alt='img' className='modal__main__img'/> */}
+
             <div className='modal__main__commentBlock'>
                 <div>
                     <div className='modal__main__logo'>
@@ -73,8 +73,8 @@ function PhotoModal({
                         Має 
                         <Checkbox 
                                 {...label} 
-                                icon={<FavoriteBorder />} 
-                                checkedIcon={<Favorite />} 
+                                icon={<FavoriteBorder style={{ color: '#1aacd4' }} />} 
+                                checkedIcon={<Favorite style={{ color: '#1aacd4' }} />} 
                                 className='modal__icons__icon' 
                                 checked={Liked || false}
                                 onChange={handleLikeToggle}

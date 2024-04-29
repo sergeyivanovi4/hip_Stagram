@@ -57,6 +57,7 @@ const api = createApi({
 								login
 								nick 
 								avatar { url }
+                incomings { text }
 								likes { _id }
 								likesCount
 								incomings { _id }
@@ -144,7 +145,7 @@ const api = createApi({
 									}
 								}
 		} `,
-        variables: { query: JSON.stringify([{ _id }, {sort: [{_id: 1}]}]) },
+        variables: { query: JSON.stringify([{ _id }, {sort: [{_id: -1}], skip: [3960]}]) },
       }),
       providesTags: (result, error, _id) => [{ type: "Post", _id: _id }],
     }),
@@ -266,21 +267,35 @@ const api = createApi({
     }),
 
     getImage: builder.query({
-      query: ({}) => ({
-        document: `query GetImage{
-								ImageFind (query: "{}"){
+      query: ({_id}) => ({
+        document: `query GetImage($query: String!){
+								ImageFind (query: $query){
 									_id 
 									text
 									url
 									originalFileName
-									userAvatar { _id login }
-									posts { _id  }
-									directs { _id }
-									owner { _id login }
+									userAvatar { _id login nick avatar{url} }
+									owner { _id login nick avatar{url} }
 							}
 						}`,
-        variables: {},
+        variables: {query: JSON.stringify([{ _id }])},
       }),
+    }),
+
+    createAvatar: builder.mutation({
+      query: ({id, avatar}) => ({
+        document: `
+        mutation setAvatar($user: UserInput!){
+          UserUpsert(user:$user){
+              _id, avatar{
+                  _id
+              }
+          }
+      }
+				`,
+        variables: { user: {_id: id, avatar: {_id: avatar}} },
+      }),
+      invalidatesTags: (result, error,  _id ) => [{ type: "User", _id}],
     }),
 
     createImage: builder.mutation({
@@ -289,15 +304,9 @@ const api = createApi({
 						mutation CreateImage ($image: ImageInput!) {
 							ImageUpsert(image: $image) {
 								_id
-								login
-								nick
-								avatar { url }
-								following {
-									_id
-									login
-									nick
-									avatar { url }
-								}
+                text
+								userAvatar { avatar { url } }
+								posts { _id text comments{ _id text }}
 							}
 						}
 				`,
@@ -337,7 +346,7 @@ const api = createApi({
 								_id login nick avatar{ url } 
 							}
 						}`,
-        variables: { query: JSON.stringify([{}]) },
+        variables: { query: JSON.stringify([{_id}]) },
       }),
       providesTags: (result, error, _id) => {
         //функція, яка створює тег, який ідентіфікує користувача
@@ -348,11 +357,11 @@ const api = createApi({
     setUserNick: builder.mutation({
       query: ({ _id, nick }) => ({
         document: `
-				mutation setNick($_id:String, $nick:String) {
-					UserUpsert(user: {_id: $_id, nick: $nick}){
-						_id nick
-					}
-				}
+              mutation setNick($_id:String, $nick:String) {
+                UserUpsert(user: {_id: $_id, nick: $nick}){
+                  _id nick
+                }
+              }
 				`,
         variables: { _id, nick },
       }),
@@ -441,7 +450,7 @@ export const store = configureStore({
 const persistor = persistStore(store);
 
 // Підписуємось на зміни у сторі та виводимо їх у консоль
-store.subscribe(() => console.log("subscribesubscribe", store.getState()));
+// store.subscribe(() => console.log("subscribesubscribe", store.getState()));
 
 // export const store = createStore(rootReducers);
 
@@ -475,17 +484,32 @@ export const actionAboutMe = () => async (dispatch, getState) => {
   if (auth.payload) {
     const { id } = auth.payload.sub;
     const user = await dispatch(api.endpoints.getFindOne.initiate(id));
-    console.log("userActionAboutMe", user);
+    // console.log("userActionAboutMe", user);
 
     dispatch(authSlice.actions.aboutMe(user.data.UserFindOne));
   }
 };
 
+
+
+export const actionCreateAvatar = (avatar) => async (dispatch, getState) => {
+  const { auth } = getState();
+  if (auth.payload) {
+    const { id } = auth.payload.sub;
+    console.log("id", id);
+    console.log("avatar", avatar);
+    const user = await dispatch(api.endpoints.createAvatar.initiate({ id, avatar}));
+    console.log("actionCreateAvatar", user);
+  }
+};
+
+
+
 export const addLikeToPost = (_id) => async (dispatch) => {
   try {
     // Відправляємо запит на додавання лайка до поста
     const data = await dispatch(api.endpoints.createLikes.initiate(_id));
-    console.log("лайкаєєєєєєєєєєєєєє", data);
+    // console.log("лайкаєєєєєєєєєєєєєє", data);
   } catch (error) {
     console.error("Помилка при додаванні лайка до поста:", error);
   }
@@ -495,7 +519,7 @@ export const removeLikeFromPost = (_id) => async (dispatch) => {
   try {
     // Відправляємо запит на видалення лайка з поста
     const data = await dispatch(api.endpoints.likeDelete.initiate(_id));
-    console.log("забираєєєєє лайкаєєєєєєєєєєєєєє", data);
+    // console.log("забираєєєєє лайкаєєєєєєєєєєєєєє", data);
 
   } catch (error) {
     console.error("Помилка при видаленні лайка з поста:", error);
@@ -508,7 +532,7 @@ export const removeLikeFromPost = (_id) => async (dispatch) => {
 export const sendComment = ( comment, _id) => async (dispatch) => {
   try {
     const data = await dispatch(api.endpoints.createComment.initiate( {  comment, _id }));
-    console.log("datasendComment", data);
+    // console.log("datasendComment", data);
   } catch (error) {
     console.error("Помилка при відправці коментаря:", error);
   }
@@ -527,7 +551,7 @@ export const {
   useGetPostOneQuery,
   useGetPostFindsQuery,
 
-
+  useCreateAvatarMutation,
   useCreateFindOneMutation,
   useCreateLikesMutation,
   useCreateImageMutation,

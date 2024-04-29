@@ -10,6 +10,15 @@
         display: flex;
     }
 }
+.useracrd__img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.useracrd__img img {
+    border-radius: 10px;
+}
 
 .usercard__hover {
     display: none;
@@ -36,10 +45,13 @@
 
 .usercard__num__r {
     margin-right: 10px;
+    color: white;
 }
 
 
 
 .usercard__num {
     font-size: 22px;
+    color: white;
+
 }

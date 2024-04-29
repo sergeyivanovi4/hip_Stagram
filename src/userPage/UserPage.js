@@ -10,13 +10,13 @@ import { useSelector } from "react-redux";
 
 
 function UserPage({ _id}) {
-  // console.log("UserPage_id_id_id_id_id_id", _id)
+// console.log("UserPage_id_id_id_id_id_id", _id)
 	const { data: response, error, isLoading } = useGetFindOneQuery(_id); // ?
 	const { data: postData, errorPost } = useGetPostFindsQuery(_id);
-	console.log("errorPost", errorPost, error)
+// console.log("errorPost", errorPost, error)
 	const userAuth = useSelector(state => state.auth?.userInfo?._id);
 	
-// console.log("!!responsePageuseruser", response)
+	console.log("!!responsePageuseruser", response)
 // console.log("!!data", postData)
   
   	const user = response?.UserFindOne;
@@ -59,6 +59,7 @@ function UserPage({ _id}) {
 				following={user?.following}
 				createdAt={user?.createdAt}
 				postCount={postCount}
+				incomings={user?.incomings?.text}
 				isMyPage={userAuth === user?._id }
 				isFollowers={user?.followers?.includes(userAuth)}
 			/>

@@ -13,7 +13,8 @@ import UserPage  from "./userPage/UserPage";
 import PageMain from "./timeline/PageMain";
 import User from "./user/user";
 import { useDispatch, useSelector } from 'react-redux';
-import { authSlice, useGetFindOneQuery } from "./app/_store";
+import { authSlice, useCreateAvatarMutation, useGetFindOneQuery } from "./app/_store";
+import AddPost from "./addPost/AddPost";
 
 
 
@@ -23,16 +24,18 @@ const Aside = () => {
 	const dispatch = useDispatch()
 	const history = useHistory();
 	const { data: response, error, isLoading } = useGetFindOneQuery() // ?
-
-
+	// const {data: UserUpsert}  = useCreateAvatarMutation()
+	// console.log("UserUpsert!", UserUpsert)
+	// console.log("response!", response)
+	
 	const handleLogout = () => {
 		localStorage.removeItem('token');
 		dispatch(authSlice.actions.logout());
 		history.push(`/`);
 	};
 
-	const user = useSelector(state => state.auth?.userInfo);
-	console.log("user!!", user)
+	const user = useSelector(state => state.auth.userInfo);
+	console.log("user!", user)
 
 	if (isLoading) {
 		return (
@@ -61,19 +64,19 @@ const Aside = () => {
 			</button> */}
 			<button className="sidenave__btn">
                 <SlideshowIcon />
-				<Link to="/news">Reels</Link>
+				<Link to="/reels">Reels</Link>
 			</button>
 			<button className="sidenave__btn">
                 <ChatIcon />
-				<Link to="/pageabout">Чат</Link>
+				<Link to="/chat">Чат</Link>
 			</button>
             <button className="sidenave__btn">
                 <FavoriteBorderIcon />
-				<Link to="/pageabout">Сповіщення</Link>
+				<Link to="/favorit">Сповіщення</Link>
 			</button>
             <button className="sidenave__btn">
                 <AddCircleOutlineIcon />
-				<Link to="/pageabout">Створити</Link>
+				<Link to="/addPost">Створити</Link>
 			</button>
 			<button className="sidenave__btn">
 				<User 
@@ -109,25 +112,24 @@ const Search = () =>
 		Пошук
 	</h2>
 </>
-
-const Create = () => 
+const Favorit = () => 
 <>
 	<h2>
-		:_id
+		Favorit...
 	</h2>
 </>
 
-const News = () => 
+const Reels = () => 
 <>
 	<h2>
-		Новини
+		Reels...
 	</h2>
 </>
 
-const PageAbout = () => 
+const Chat = () => 
 <>
 	<h2>
-		Мій профіль: 
+		Chat...
 	</h2>
 </>
 
@@ -149,9 +151,11 @@ function Homepage() {
                     <Switch>
                             <Route path="/" component = { PageMain } exact />
                             <Route path="/search" component = { Search } exact  />
+                            <Route path="/reels" component = { Reels } exact  />
+                            <Route path="/chat" component = { Chat } exact  />
+							<Route path="/addPost" component = { AddPost } />
+							<Route path="/favorit" component = { Favorit } />
 							<Route path="/:_id" render={(props) => <UserPage _id={props.match.params._id} />} exact />
-                            <Route path="/news" component = { News } exact  />
-                            <Route path="/pageabout" component = { PageAbout } exact  />
 
                             <Page404 />
                     </Switch>               

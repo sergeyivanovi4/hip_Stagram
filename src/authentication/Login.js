@@ -39,8 +39,8 @@ function Login() {
 // };
   
 
-  console.log('LOGIN FORM', isLoading, data)
-  console.log("store.getState", store.getState());
+  // console.log('LOGIN FORM', isLoading, data)
+  // console.log("store.getState", store.getState());
   
   return (
     <div className="login">

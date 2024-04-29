@@ -30,6 +30,12 @@
 .modal__main {
     display: flex;
     color: black !important;
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px; 
+}
+.modal__main img{
+    border-top-left-radius: 10px;
+    border-bottom-left-radius: 10px; 
 }
 
 .modal__main__image {
@@ -37,21 +43,21 @@
     justify-content: center;
     align-items: center;
     background: #61dafb;
-    min-width: 30vw;
+    min-width: 40vw;
     height: 80vh;
     border-top-left-radius: 10px;
     border-bottom-left-radius: 10px; 
 }
 
-.modal__main__img {
+/* .modal__main__img {
     max-width: 1024px;
     max-height: 1024px;
-}
+} */
 
 .modal__main__commentBlock {
     display: flex;
     justify-content: space-between;
-    width: 70vw;
+    width: 60vw;
     flex-direction: column;
     color: black !important;
 }
@@ -81,7 +87,7 @@
 .modal__main__logo__avatar, .modal__main__logo__Avatar {
     height: 40px;
     width: 40px;
-    border-radius: 50%;
+    border-radius: 50% !important;
     margin-left: 10px;
 }
 
