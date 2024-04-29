@@ -2,81 +2,72 @@ import React, { useState } from 'react';
 import "./Sugesstions.css";
 import Avatar from '@mui/material/Avatar';
 import User from '../user/user';
-import { useGetFindOneQuery } from '../app/_store';
+import { useGetUserByIdQuery, useGetUsersQuery } from '../app/_store';
+import { useHistory } from 'react-router-dom';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 
 function Sugesstions({
-    nick,
-    avatar,
-    _id,
-    // user,
-    children
+
 }) {
 
-    const { data: response, error, isLoading } = useGetFindOneQuery(_id); // ?
-    const user = response?.UserFindOne;
-    const [ postForRender, setPostForRender ] = useState([]);
+    const { data: response, error, isLoading} = useGetUsersQuery(); // ?
+    const [itemsToShow, setItemsToShow] = useState(15); 
+    const loadMoreItems = () => {
+        setItemsToShow(itemsToShow + 5);
+    };
 
+    console.log("Sugesstions", itemsToShow, response,)
   return (
     <div className='sugesstion'>
         <div className='sugesstion__title'>
-            for you
-        </div>
-        
-        <User user={user} avatar={avatar} _id={_id}  className='sugesstion__title__userbadge'/>
-
-        <div className='sugesstion__usernames'>
-            <div className='sugesstion__username'>
-                    <div className='sugesstion__username__left'>
-                        <span className='avatar'>
-                            <Avatar>R</Avatar>
-                        </span>
-                        <div className='username__info'>
-                            <span className='username'>name</span>
-                            <span className='username__relation'>new to hipstagram</span>
-                        </div>
-                    </div>
-                    <div className='sugesstion__follow__btn'>
-                        follow
-                    </div>
-            </div>
+            :Рекомендовані для Вас    
         </div>
 
-        
-        <div className='sugesstion__usernames'>
-            <div className='sugesstion__username'>
-                    <div className='sugesstion__username__left'>
-                        <span className='avatar'>
-                            <Avatar>R</Avatar>
-                        </span>
-                        <div className='username__info'>
-                            <span className='username'>name</span>
-                            <span className='username__relation'>new to hipstagram</span>
-                        </div>
-                    </div>
-                    <div className='sugesstion__follow__btn'>
-                        follow
-                    </div>
-            </div>
-        </div>
+        {isLoading ? (<p className="pagemain__loading">...Завантаження</p>) :
 
-        
-        <div className='sugesstion__usernames'>
-            <div className='sugesstion__username'>
-                    <div className='sugesstion__username__left'>
-                        <span className='avatar'>
-                            <Avatar>R</Avatar>
-                        </span>
-                        <div className='username__info'>
-                            <span className='username'>name</span>
-                            <span className='username__relation'>new to hipstagram</span>
+                <InfiniteScroll
+                     dataLength={itemsToShow}
+                     next={loadMoreItems}
+                     hasMore={response.UserFind?.length > itemsToShow} // Перевірка, чи є ще елементи для завантаження
+                     loader={<p>...Завантаження</p>}
+                     endMessage={<p>Юзерів не має</p>} // Повідомлення, яке відображається після завантаження всіх елементів
+                >
+
+                {response?.UserFind.map((user) => 
+                        <div key={user?._id} className='sugesstion__username'>
+                                <User 
+                                    key={user?._id} 
+                                    _id={user?._id} 
+                                    login={user?.login}
+                                    avatar={user?.avatar?.url}
+                                    nick={user?.nick}
+                                    followers={user?.followers}
+                                    following={user?.following}
+                                    createdAt={user?.createdAt}
+                                />
                         </div>
-                    </div>
-                    <div className='sugesstion__follow__btn'>
-                        follow
-                    </div>
-            </div>
-        </div>
+                )}
+                </InfiniteScroll>}
+
+        {/* {response?.UserFind.map((user) => 
+                <div className='sugesstion__username'>
+                        <div className='sugesstion__username__left' onClick={handleUserClick}>
+                            
+                            <div className='username__info'>
+                                <span className='username'>{user.login} </span>
+                                <span className='username__relation'>new to hipstagram</span>
+                            </div>
+                            <span className='avatar'>
+                                <Avatar>R</Avatar>
+                            </span>
+                        </div>
+                        <div className='sugesstion__follow__btn'>
+                            Стежити
+                        </div>
+                </div>
+    )    } */}
+
     </div>
   )
 }

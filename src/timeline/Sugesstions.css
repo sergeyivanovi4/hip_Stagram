@@ -1,28 +1,40 @@
 .sugesstion {
     width: 20vw;
-    margin-top: 30px;
     padding: 15px;
     position: sticky;
     top: 0px;
+    overflow-y: auto; 
+    height: 100vh;
+    direction: rtl; 
 }
 
 .sugesstion__title {
-    color: gray;
+    text-align: end;
+    color: #61dafb;
     font-weight: bold;
+    position: sticky;
+    top: 0px;
 }
-
+.username__info {
+    text-align: end;
+}
 .sugesstion__username__left {
     display: flex;
     align-items: center;
 }
 
 .sugesstion__username {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+    padding: 3px;
+    /* display: flex; */
+    /* flex-direction: row-reverse !important; */
+    /* justify-content: space-between;
     margin-top: 15px;
-    gap: 10px;
+    gap: 10px; */
 }
+
+/* .sugesstion__username  span {
+    order: 0 !important;
+} */
 
 .sugesstion__title__userbadge {
     color: white;
@@ -57,4 +69,20 @@
 
 .avatar {
     margin-right: 10px;
+}
+
+
+
+
+.sugesstion::-webkit-scrollbar {
+    width: 5px; /* Ширина скрола */
+  }
+  
+.sugesstion::-webkit-scrollbar-thumb {
+    background-color: #61dafb; /* Колір пальця скрола */
+    border-radius: 4px; /* Радіус кутів пальця скрола */
+  }
+  
+.sugesstion::-webkit-scrollbar-track {
+    background: transparent; /* Колір фону скрола */
 }

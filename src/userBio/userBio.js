@@ -54,7 +54,7 @@ function UserBio({
         } else if (isFollowers) {
             setBtnProps({ onClick: () => false, children: "Відписатись" })
         } else {
-            setBtnProps({ onClick: () => false, children: "Підписатись" })
+            setBtnProps({ onClick: () => false, children: "Стежити" })
         }
     }, [isMyPage, isFollowers, isEditMode, nickName])
 

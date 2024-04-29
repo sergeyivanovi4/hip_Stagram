@@ -14,7 +14,7 @@ import ImageWithLoader from '../imageWithLoader/ImageWithLoader';
 const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
 function UserCardPhotos({
-  key,  _id, likes, like, avatar, postImage, comments,commentsText, likesId, isLoading, login, nick,
+   _id, likes, like, avatar, postImage, comments,commentsText, likesId, isLoading, login, nick,
 }) {
 
     const dispatch = useDispatch();

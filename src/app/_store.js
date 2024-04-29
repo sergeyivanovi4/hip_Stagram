@@ -23,30 +23,34 @@ const api = createApi({
         //якщо ми залогінени
         headers.set("Authorization", "Bearer " + token); //додаємо токен до заголовків
       }
-      console.log("auth!", getState().auth, token);
+// console.log("auth!", getState().auth, token);
       return headers;
     },
   }),
 
   endpoints: (builder) => ({
-    getFind: builder.query({
+
+    getUsers: builder.query({
       query: () => ({
-        document: `query HipstagramFind {
-							UserFind(query: "[ {}, { \"sort\": [{\"_id\:"-1}] } ]") {
+        document: `query getUsers($query: String!){
+							UserFind(query: $query) {
 								_id 
 								createdAt
 								login
-									nick 
-									avatar { url }
+								nick 
+								avatar { url }
 									likes { _id }
 									incomings { _id }
 										followers { _id }
 										following { _id }
 							}
 						}`,
-        variables: {},
-      }),
-    }),
+            variables: { query: JSON.stringify([{}, {sort: [{_id: -1}], skip: [60]}]) },
+            // variables: { query: JSON.stringify([{}, {sort: [{_id: -1}]}]) },
+    
+          }),
+          providesTags: (result, error, _id) => [{ type: "Post", _id: _id }],
+        }),
 
     getFindOne: builder.query({
       query: (id) => ({
@@ -579,6 +583,7 @@ export const {
   useGetUserByIdQuery,
   useGetPostOneQuery,
   useGetPostFindsQuery,
+  useGetUsersQuery,
 
   useCreateAvatarMutation,
   useCreateFindOneMutation,

@@ -8,6 +8,7 @@
 .user__root {
     display: flex;
     align-items: center;
+    order: 2;
     /* justify-content: space-between; */
     cursor: pointer;
 
@@ -16,12 +17,16 @@
     }
 }
 
-.user__avatar{
+.user__avatar {
     width: 40px;
     height: 40px;
-    margin-right: 10px;
     border-radius: 50%;
+    /* order: 1; */
 }
+
+/* .user__Avatar {
+    order: 1;
+} */
 
 .user__placeholder{
     width: 40px;
@@ -32,7 +37,8 @@
 }
 
 .user__name {
-    padding-left: 10px;
+    margin-right: 10px;
+    padding-left: 20px;
     font-size: 16px;
     font-weight: bolder;
     color: white;

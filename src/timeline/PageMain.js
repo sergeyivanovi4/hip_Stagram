@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import Sugesstions from "./Sugesstions";
 import "./PageMain.css";
 import Post from "./posts/Post"
-import { getHipstagramPost, useGetHipstagramPostQuery, useGetHipstagramFindQuery, useGetPostOneQuery } from "../app/_store"
+import { getHipstagramPost, useGetHipstagramPostQuery, useGetHipstagramFindQuery, useGetPostOneQuery, useGetUserByIdQuery, useGetUsersQuery } from "../app/_store"
 import InfiniteScroll from "react-infinite-scroll-component";
 
 
@@ -11,7 +11,6 @@ function PageMain() {
 
     const { data: response, error, isLoading } = useGetPostOneQuery(); 
     // console.log("RRRResponsePageMainPageMain", response)
-    
 
         const [itemsToShow, setItemsToShow] = useState(5); 
         const loadMoreItems = () => {
@@ -51,7 +50,7 @@ function PageMain() {
             </div>
         </div>
         <div className="pagemain__right">
-            <Sugesstions nickName={"ВАСЯ"} _id={23655}/>
+            <Sugesstions />
         </div>
     </div>
 }
